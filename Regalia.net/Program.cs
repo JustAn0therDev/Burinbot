@@ -20,8 +20,6 @@ namespace Regalia.net
         {
             string token = "NTc4NzM2MTMwNjY5OTM2NjQw.XWrOAg._ap6Oq-FSo1n1gMu5mibq2SLJQ4";
 
-            //_client.Log += Log;
-
             _client = new DiscordSocketClient();
             _commands = new CommandService();
             _services = new ServiceCollection()
@@ -29,7 +27,11 @@ namespace Regalia.net
                 .AddSingleton(_commands)
                 .BuildServiceProvider();
 
+            _client.Log += Log;
+
             await RegisterCommandsAsync();
+
+            await _client.SetGameAsync("Now available in C#!");
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
@@ -56,7 +58,7 @@ namespace Regalia.net
             if (message == null || message.Author.IsBot) return;
 
             int argPos = 0;
-            if (message.HasStringPrefix("testing!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos) || !_client.CurrentUser.IsBot)
             {
                 var context = new SocketCommandContext(_client, message);
 
