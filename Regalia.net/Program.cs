@@ -28,7 +28,7 @@ namespace Regalia.net
                 .BuildServiceProvider();
 
             _client.Log += Log;
-
+            _client.UserJoined += AnnounceUserJoined;
             await RegisterCommandsAsync();
 
             await _client.SetGameAsync("Now available in C#!");
@@ -37,6 +37,12 @@ namespace Regalia.net
             await _client.StartAsync();
 
             await Task.Delay(-1);
+        }
+
+        private Task AnnounceUserJoined(SocketGuildUser user)
+        {
+            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server. Welcome to the humble! :call_me::skin-tone-1:");
+            return Task.CompletedTask;
         }
 
         private Task Log(LogMessage arg)
