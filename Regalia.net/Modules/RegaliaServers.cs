@@ -15,13 +15,13 @@ namespace Regalia.net.Modules
         {
             DiscordSocketClient discordSocketClient = Context.Client;
             EmbedBuilder builder = new EmbedBuilder();
-            StringBuilder sb = new StringBuilder();
+            var description = "";
             foreach (SocketGuild guild in discordSocketClient.CurrentUser.MutualGuilds)
             {
-                sb.AppendLine($"{guild.Name}");
+                description += $"{guild.Name}\n";
             }
             builder.WithTitle($"Regalia is currently in { discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
-                .WithDescription(sb.ToString()).WithColor(Color.Green);
+                .WithDescription(description).WithColor(Color.Green);
             //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message.
             await ReplyAsync("", false, builder.Build());
         }

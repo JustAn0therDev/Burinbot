@@ -31,7 +31,7 @@ namespace Regalia.net
             _client.UserJoined += AnnounceUserJoined;
             await RegisterCommandsAsync();
 
-            await _client.SetGameAsync("Now available in C#!");
+            await _client.SetGameAsync("Type !help to see all of the available commands!");
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
