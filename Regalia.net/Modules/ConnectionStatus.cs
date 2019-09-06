@@ -8,6 +8,7 @@ namespace Regalia.net.Modules
         private string _command = "mystatus";
         private string _description = "Returns the current connection status of the user that requested the command.";
         [Command("mystatus")]
+        [Alias("mystatus")]
         [Summary("Returns the current connection status of the user that requested the command.")]
         public async Task GetConnectionStateAsync()
         {

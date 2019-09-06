@@ -8,11 +8,9 @@ namespace Regalia.net.Modules
 {
     public class RegaliaServers : ModuleBase<SocketCommandContext>
     {
-        private string _command = "servers";
-        private string _description = "Returns a list of servers in which the bot is currently in.";
-
         [Command("servers")]
-        [Summary("Returns a list of servers in which the bot is currently in.")]
+        [Alias("servers")]
+        [Summary("Returns a list of servers in which Regalia is currently in.")]
         public async Task GetRegaliaServers()
         {
             DiscordSocketClient discordSocketClient = Context.Client;

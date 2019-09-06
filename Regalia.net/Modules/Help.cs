@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Regalia.net.Modules
 {
@@ -13,6 +14,7 @@ namespace Regalia.net.Modules
             _service = service;
         }
         [Command("help")]
+        [Alias("help")]
         [Summary("Returns a list containing all of Regalia's commands.")]
         public async Task GetHelpAsync()
         {
@@ -29,7 +31,7 @@ namespace Regalia.net.Modules
                 {
                     var result = await cmd.CheckPreconditionsAsync(Context);
                     if (result.IsSuccess)
-                        description += $"{cmd.Summary}\n";
+                        description += $"!{cmd.Aliases.First()}\n{cmd.Summary}";
                 }
 
                 if (!string.IsNullOrWhiteSpace(description))
