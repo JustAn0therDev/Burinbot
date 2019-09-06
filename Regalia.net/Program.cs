@@ -41,7 +41,7 @@ namespace Regalia.net
 
         private Task AnnounceUserJoined(SocketGuildUser user)
         {
-            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server. Welcome to the humble! :call_me::skin-tone-1:");
+            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server. Welcome to the Royal Castle.");
             return Task.CompletedTask;
         }
 

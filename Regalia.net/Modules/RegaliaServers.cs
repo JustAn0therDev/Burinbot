@@ -16,8 +16,13 @@ namespace Regalia.net.Modules
         {
             DiscordSocketClient discordSocketClient = Context.Client;
             EmbedBuilder builder = new EmbedBuilder();
-            //TODO: Use StringBuilder to show the list of servers in which Regalia is currently in.
-            builder.WithTitle("Regalia servers!").WithDescription($"Regalia is currently in {discordSocketClient.CurrentUser.MutualGuilds.Count} servers!").WithColor(Color.Green);
+            StringBuilder sb = new StringBuilder();
+            foreach (SocketGuild guild in discordSocketClient.CurrentUser.MutualGuilds)
+            {
+                sb.AppendLine($"{guild.Name}");
+            }
+            builder.WithTitle($"Regalia is currently in { discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
+                .WithDescription(sb.ToString()).WithColor(Color.Green);
             //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message.
             await ReplyAsync("", false, builder.Build());
         } 
