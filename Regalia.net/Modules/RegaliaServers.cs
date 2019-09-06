@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Regalia.net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,9 @@ namespace Regalia.net.Modules
 {
     public class RegaliaServers : ModuleBase<SocketCommandContext>
     {
+        private string _command = "servers";
+        private string _description = "Returns a list of servers in which the bot is currently in.";
+
         [Command("servers")]
         [Summary("Returns a list of servers in which the bot is currently in.")]
         public async Task GetRegaliaServers()
@@ -25,6 +29,6 @@ namespace Regalia.net.Modules
                 .WithDescription(sb.ToString()).WithColor(Color.Green);
             //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message.
             await ReplyAsync("", false, builder.Build());
-        } 
+        }
     }
 }

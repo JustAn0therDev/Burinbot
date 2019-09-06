@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Regalia.net", "Regalia.net\Regalia.net.csproj", "{0AF27C24-9204-4A26-B2C0-D3516D2D0823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Regalia.net", "Regalia.net\Regalia.net.csproj", "{0AF27C24-9204-4A26-B2C0-D3516D2D0823}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

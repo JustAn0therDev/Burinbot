@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +10,46 @@ namespace Regalia.net.Modules
 {
     public class Help : ModuleBase<SocketCommandContext>
     {
+        private readonly CommandService _service;
+
+        public Help(CommandService service)
+        {
+            _service = service;
+        }
         [Command("help")]
-        [Summary("Returns a list with all of the available commands.")]
+        [Summary("Returns a list containing all of Regalia's commands.")]
         public async Task GetHelpAsync()
         {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            StringBuilder sb = new StringBuilder();
             var builder = new EmbedBuilder()
             {
                 Color = new Color(114, 137, 218),
-                Description = "These are the commands you can use"
+                Description = "These are the available commands:"
             };
-            await ReplyAsync(embedBuilder.WithTitle("These are the available commands:").WithDescription("").ToString());
+
+            foreach (var module in _service.Modules)
+            {
+                string description = null;
+                foreach (var cmd in module.Commands)
+                {
+                    var result = await cmd.CheckPreconditionsAsync(Context);
+                    if (result.IsSuccess)
+                        description += $"{cmd.Summary}\n";
+                }
+
+                if (!string.IsNullOrWhiteSpace(description))
+                {
+                    builder.AddField(x =>
+                    {
+                        x.Name = module.Name;
+                        x.Value = description;
+                        x.IsInline = false;
+                    });
+                }
+            }
+
+            await ReplyAsync("", false, builder.Build());
         }
+
     }
 }
+
