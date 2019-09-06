@@ -1,9 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Regalia.net.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 

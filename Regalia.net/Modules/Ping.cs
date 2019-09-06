@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
-using Regalia.net.Interfaces;
 using System.Threading.Tasks;
 
 namespace Regalia.net.Modules
