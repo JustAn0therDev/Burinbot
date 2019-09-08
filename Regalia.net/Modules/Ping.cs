@@ -1,19 +1,19 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Regalia.net.Modules
 {
     public class Ping : ModuleBase<SocketCommandContext>
     {
-        private DiscordSocketClient _client;
         [Command("ping")]
         [Alias("ping")]
-        [Summary("Returns Regalia's latency relative to the Discord API connection (It does not reflect on it's ping on an action like reading and processing a message).")]
+        [Summary("Returns Regalia's latency relative to the Discord API's heartbeat!")]
         public async Task ShowPing()
         {
-            _client = new DiscordSocketClient();
-            await ReplyAsync($"{_client.Latency}ms");
+            await ReplyAsync($"Pong! Latency: {Context.Client.Latency}ms");
         }
     }
 }
