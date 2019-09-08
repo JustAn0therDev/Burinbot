@@ -13,7 +13,7 @@ namespace Regalia.net.Modules
         [Summary("Returns Regalia's latency relative to the Discord API's heartbeat!")]
         public async Task ShowPing()
         {
-            await ReplyAsync($"Pong! Latency: {Context.Client.Latency}ms");
+            await ReplyAsync($"{Context.User.Mention} pong! Latency: {Context.Client.Latency}ms");
         }
     }
 }

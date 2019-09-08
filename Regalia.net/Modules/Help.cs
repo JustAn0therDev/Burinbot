@@ -20,7 +20,7 @@ namespace Regalia.net.Modules
         {
             var builder = new EmbedBuilder()
             {
-                Color = new Color(114, 137, 218),
+                Color = Color.Green,
                 Description = "These are the available commands:"
             };
 
