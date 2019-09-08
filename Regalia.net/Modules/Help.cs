@@ -47,7 +47,6 @@ namespace Regalia.net.Modules
 
             await ReplyAsync("", false, builder.Build());
         }
-
     }
 }
 

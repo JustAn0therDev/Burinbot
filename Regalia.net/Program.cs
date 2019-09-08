@@ -10,7 +10,7 @@ namespace Regalia.net
 {
     class Program
     {
-        public static void Main(string[] args) => new Program().RunBotAsync().GetAwaiter().GetResult();
+        public static void Main() => new Program().RunBotAsync().GetAwaiter().GetResult();
 
         private DiscordSocketClient _client;
         private CommandService _commands;
