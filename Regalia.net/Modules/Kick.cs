@@ -8,6 +8,8 @@ namespace Regalia.net.Modules
     {
         [Command("kick")]
         [Summary("Kicks a member of the server. Regalia must have permission to kick somebody.")]
+        [RequireUserPermission(Discord.GuildPermission.KickMembers)]
+        [RequireBotPermission(Discord.GuildPermission.KickMembers)]
         public async Task KickAsync(SocketGuildUser user)
         {
             await user.KickAsync();
