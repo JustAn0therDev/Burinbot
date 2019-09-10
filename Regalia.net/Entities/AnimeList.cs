@@ -1,7 +1,7 @@
 ﻿using RestSharp.Deserializers;
 using System.Collections.Generic;
 
-namespace Regalia.net.Entities
+namespace Burinbot.Entities
 {
     public class AnimeList
     {

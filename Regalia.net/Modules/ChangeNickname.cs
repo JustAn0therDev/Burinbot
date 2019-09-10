@@ -2,7 +2,7 @@
 using Discord.WebSocket;
 using System.Threading.Tasks;
 
-namespace Regalia.net.Modules
+namespace Burinbot.Modules
 {
     public class ChangeNickname : ModuleBase<SocketCommandContext>
     {

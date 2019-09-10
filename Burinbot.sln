@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Regalia.net", "Regalia.net\Regalia.net.csproj", "{0AF27C24-9204-4A26-B2C0-D3516D2D0823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Burinbot", "Regalia.net\Burinbot.csproj", "{0AF27C24-9204-4A26-B2C0-D3516D2D0823}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

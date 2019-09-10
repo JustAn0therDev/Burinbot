@@ -6,7 +6,7 @@ using Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Regalia.net
+namespace Burinbot
 {
     class Program
     {
@@ -41,7 +41,7 @@ namespace Regalia.net
 
         private Task AnnounceUserJoined(SocketGuildUser user)
         {
-            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server. Welcome to the Royal Castle.");
+            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server. Welcome to the humble.");
             return Task.CompletedTask;
         }
 

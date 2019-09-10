@@ -1,0 +1,11 @@
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\bin\Debug\netcoreapp2.1\Burinbot.deps.json
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\bin\Debug\netcoreapp2.1\Burinbot.runtimeconfig.json
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\bin\Debug\netcoreapp2.1\Burinbot.runtimeconfig.dev.json
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\bin\Debug\netcoreapp2.1\Burinbot.dll
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\obj\Debug\netcoreapp2.1\Burinbot.csprojAssemblyReference.cache
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\obj\Debug\netcoreapp2.1\Burinbot.csproj.CoreCompileInputs.cache
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\obj\Debug\netcoreapp2.1\Burinbot.AssemblyInfoInputs.cache
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\obj\Debug\netcoreapp2.1\Burinbot.AssemblyInfo.cs
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\bin\Debug\netcoreapp2.1\Burinbot.pdb
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\obj\Debug\netcoreapp2.1\Burinbot.dll
+C:\Users\highl\source\repos\Regalia.net\Regalia.net\obj\Debug\netcoreapp2.1\Burinbot.pdb

@@ -1,16 +1,24 @@
 ﻿using Discord.Commands;
+using System;
 using System.Threading.Tasks;
 
-namespace Regalia.net.Modules
+namespace Burinbot.Modules
 {
     public class Ping : ModuleBase<SocketCommandContext>
     {
-        [Command("ping")]
+        [Command("oinc")]
         [Alias("ping")]
-        [Summary("Returns Regalia's latency relative to the Discord API's heartbeat!")]
+        [Summary("Returns Burinbot's latency relative to the Discord API's heartbeat!")]
         public async Task ShowPing()
         {
-            await ReplyAsync($"{Context.User.Mention} pong! Latency: {Context.Client.Latency}ms");
+            try
+            {
+                await ReplyAsync($"{Context.User.Mention} pong! Latency: {Context.Client.Latency}ms");
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
