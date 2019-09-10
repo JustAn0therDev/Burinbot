@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Burinbot.Entities
 {
-    public class AnimeList
+    public class RecommendationList
     {
         public List<Recommendation> Recommendations { get; set; } = new List<Recommendation>();
     }
@@ -11,7 +11,7 @@ namespace Burinbot.Entities
     public class Recommendation
     {
         [DeserializeAs(Name = "mal_id")]
-        public decimal MalID { get; set; }
+        public int MalID { get; set; }
         [DeserializeAs(Name = "title")]
         public string Title { get; set; }
         [DeserializeAs(Name = "url")]

@@ -5,6 +5,7 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.IO;
 
 namespace Burinbot
 {
@@ -18,7 +19,7 @@ namespace Burinbot
 
         public async Task RunBotAsync()
         {
-            string token = "NTc4NzM2MTMwNjY5OTM2NjQw.XWrOAg._ap6Oq-FSo1n1gMu5mibq2SLJQ4";
+            string token = File.ReadAllText("token.txt");
 
             _client = new DiscordSocketClient();
             _commands = new CommandService();

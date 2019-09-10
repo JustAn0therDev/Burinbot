@@ -8,11 +8,11 @@ using System;
 
 namespace Burinbot.Modules
 {
-    public class Recommend : ModuleBase<SocketCommandContext>
+    public class RecommendAnime : ModuleBase<SocketCommandContext>
     {
         [Command("recommend")]
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]
-        public async Task GetAnimeRecommendationAsync([Remainder]string animeName)
+        public async Task GetAnimeRecommendationsAsync([Remainder]string animeName)
         {
             try
             {
@@ -26,11 +26,12 @@ namespace Burinbot.Modules
                     Color = Color.Green,
                     Description = "These are the animes I found based on what you told me:"
                 };
-                AnimeSearch searchList = new AnimeSearch();
+
+                RecommendationSearch searchList = new RecommendationSearch();
 
                 string search = animeName.Replace(" ", "%20");
                 var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
-                var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
+                var requestedAnime = firstClient.Execute<RecommendationSearch>(new RestRequest());
 
                 if (requestedAnime.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -43,9 +44,9 @@ namespace Burinbot.Modules
                     searchList.Results.Add(anime);
                 }
 
-                AnimeList AnimeList = new AnimeList();
+                RecommendationList AnimeList = new RecommendationList();
                 var secondClient = new RestClient($"https://api.jikan.moe/v3/anime/{searchList.Results.First().MalID}/recommendations");
-                var secondResponse = secondClient.Execute<AnimeList>(new RestRequest());
+                var secondResponse = secondClient.Execute<RecommendationList>(new RestRequest());
                 foreach (var anime in secondResponse.Data.Recommendations)
                 {
                     //Limits the size of the list to 25 so Discord can render the embed list.
@@ -62,7 +63,6 @@ namespace Burinbot.Modules
                         x.IsInline = false;
                     });
                 }
-
                 await ReplyAsync("", false, builder.Build());
             }
             catch(ArgumentException aex)
