@@ -24,11 +24,12 @@ namespace Burinbot.Modules
 
                 AnimeSearch searchList = new AnimeSearch();
 
+                //This first search is made because the API does not have a route that accepts a string as an argument to get recommendations.
                 string search = animeName.Replace(" ", "%20");
                 var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
                 var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
 
-                if (requestedAnime.StatusCode != System.Net.HttpStatusCode.OK)
+                if (requestedAnime.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
                     return;

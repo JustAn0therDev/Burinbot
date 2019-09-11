@@ -13,11 +13,6 @@ namespace Burinbot.Modules
         [Summary("Gets the summary and some more information about the requested anime!")]
         public async Task GetAnimeSummaryAsync([Remainder]string animeName)
         {
-            var builder = new EmbedBuilder()
-            {
-                Color = Color.Green,
-                Description = "Info about the anime:"
-            };
             string search = animeName.Replace(" ", "%20");
             var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
             var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
