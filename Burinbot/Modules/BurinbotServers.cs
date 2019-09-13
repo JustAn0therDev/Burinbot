@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class ButinbotServers : ModuleBase<SocketCommandContext>
+    public class BurinbotServers : ModuleBase<SocketCommandContext>
     {
         [Command("servers")]
         [Alias("servers")]
