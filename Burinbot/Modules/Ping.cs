@@ -13,7 +13,7 @@ namespace Burinbot.Modules
         {
             try
             {
-                await ReplyAsync($"{Context.User.Mention} pong! Latency: {Context.Client.Latency}ms");
+                await ReplyAsync($"{Context.User.Mention} ronc! Latency: {Context.Client.Latency}ms");
             } 
             catch (Exception ex)
             {
