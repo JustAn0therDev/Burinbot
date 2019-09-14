@@ -16,7 +16,7 @@ namespace Burinbot.Modules
             try
             {
                 await user.KickAsync();
-                await ReplyAsync($"{Context.User.Mention}, the requested user has been kicked from the server.");
+                await ReplyAsync($"{Context.User.Mention}, the requested user has been kicked from this server.");
             }
             catch (ArgumentNullException anex)
             {

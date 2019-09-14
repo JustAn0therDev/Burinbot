@@ -42,7 +42,7 @@ namespace Burinbot
 
         private Task AnnounceUserJoined(SocketGuildUser user)
         {
-            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server. Welcome to the humble.");
+            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server! Welcome, oinc!");
             return Task.CompletedTask;
         }
 

@@ -31,7 +31,7 @@ namespace Burinbot.Modules
             Manga MangaResult = requestedManga.Data.Results.First();
 
             await ReplyAsync(
-                $"{MangaResult.Title}\nMore Info: {MangaResult.URL}\nSynopsis: {MangaResult.Synopsis}\nEpisodes: {MangaResult.Chapters}\nScore: {MangaResult.Score}"
+                $"{MangaResult.Title}\nMore Info: {MangaResult.URL}\nSynopsis: {MangaResult.Synopsis}\nChapters: {MangaResult.Chapters}\nScore: {MangaResult.Score}"
                 );
         }
     }
