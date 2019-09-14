@@ -1,5 +1,4 @@
 ﻿using Burinbot.Entities;
-using Discord;
 using Discord.Commands;
 using RestSharp;
 using System.Linq;
@@ -9,7 +8,7 @@ namespace Burinbot.Modules
 {
     public class AnimeSummary : ModuleBase<SocketCommandContext>
     {
-        [Command("summary")]
+        [Command("animesummary")]
         [Summary("Gets the summary and some more information about the requested anime!")]
         public async Task GetAnimeSummaryAsync([Remainder]string animeName)
         {
@@ -17,7 +16,7 @@ namespace Burinbot.Modules
             var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
             var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
 
-            if (requestedAnime.StatusCode != System.Net.HttpStatusCode.OK)
+            if (requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
             {
                 await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
                 return;
@@ -29,8 +28,7 @@ namespace Burinbot.Modules
                 return;
             }
 
-            Anime AnimeResult = new Anime();
-            AnimeResult = requestedAnime.Data.Results.First();
+            Anime AnimeResult = requestedAnime.Data.Results.First();
 
             await ReplyAsync(
                 $"{AnimeResult.Title}\nMore Info: {AnimeResult.URL}\nSynopsis: {AnimeResult.Synopsis}\nEpisodes: {AnimeResult.Episodes}\nScore: {AnimeResult.Score}"

@@ -24,7 +24,7 @@ namespace Burinbot.Modules
                 }
                 builder.WithTitle($"Burinbot is currently in { discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
                     .WithDescription(description).WithColor(Color.Green);
-                //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message.
+                //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message with the build method.
                 await ReplyAsync("", false, builder.Build());
             }
             catch (ArgumentException aex)

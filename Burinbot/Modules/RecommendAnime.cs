@@ -29,7 +29,7 @@ namespace Burinbot.Modules
                 var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
                 var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
 
-                if (requestedAnime.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                if (requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
                 {
                     await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
                     return;
