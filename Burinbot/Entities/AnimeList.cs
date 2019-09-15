@@ -11,6 +11,8 @@ namespace Burinbot.Entities
 
     public class Anime
     {
+        [DeserializeAs(Name = "name")]
+        public string Name { get; set; }
         [DeserializeAs(Name = "mal_id")]
         public int MalID { get; set; }
         [DeserializeAs(Name = "url")]

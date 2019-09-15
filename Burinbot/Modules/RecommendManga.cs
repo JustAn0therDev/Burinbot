@@ -19,7 +19,7 @@ namespace Burinbot.Modules
             {
                 var builder = new EmbedBuilder()
                 {
-                    Color = Discord.Color.Green,
+                    Color = Color.Green,
                     Description = "These are the mangas I found based on what you told me:"
                 };
                 MangaSearch searchList = new MangaSearch();
@@ -41,9 +41,8 @@ namespace Burinbot.Modules
                 }
 
                 foreach (var manga in requestedManga.Data.Results)
-                {
                     searchList.Results.Add(manga);
-                }
+
 
                 MangaList RecommendationList = new MangaList();
                 var finalClient = new RestClient($"https://api.jikan.moe/v3/manga/{searchList.Results.First().MalID}/recommendations");
@@ -57,9 +56,8 @@ namespace Burinbot.Modules
                 }
 
                 if (RecommendationList.Recommendations.Count == 0)
-                {
                     await ReplyAsync("I couldn't find any recommendations based on the manga you informed.");
-                }
+
 
                 foreach (var recommendation in RecommendationList.Recommendations)
                 {

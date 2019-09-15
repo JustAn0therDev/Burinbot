@@ -42,9 +42,8 @@ namespace Burinbot.Modules
                 }
 
                 foreach (var anime in requestedAnime.Data.Results)
-                {
                     searchList.Results.Add(anime);
-                }
+
 
                 AnimeList RecommendationList = new AnimeList();
 
@@ -71,11 +70,11 @@ namespace Burinbot.Modules
                 }
                 await ReplyAsync("", false, builder.Build());
             }
-            catch(ArgumentException aex)
+            catch (ArgumentException aex)
             {
                 Console.WriteLine(aex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }

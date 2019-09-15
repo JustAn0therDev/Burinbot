@@ -28,6 +28,7 @@ namespace Burinbot.Modules
                 return;
             }
 
+            //There is no exception treatment in this case because the .NET Core compiler will already do that for us by default.
             Anime AnimeResult = requestedAnime.Data.Results.First();
 
             await ReplyAsync(
