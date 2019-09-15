@@ -72,5 +72,17 @@ namespace Burinbot.Entities
         public List<Anime> Animes { get; set; } = new List<Anime>();
         [DeserializeAs(Name = "manga")]
         public List<Manga> Mangas { get; set; } = new List<Manga>();
+        [DeserializeAs(Name = "characters")]
+        public List<Character> Characters { get; set; } = new List<Character>();
+    }
+
+    public class Character
+    {
+        [DeserializeAs(Name = "name")]
+        public string Name { get; set; }
+        [DeserializeAs(Name = "mal_id")]
+        public int MalID { get; set; }
+        [DeserializeAs(Name = "url")]
+        public string URL { get; set; }
     }
 }

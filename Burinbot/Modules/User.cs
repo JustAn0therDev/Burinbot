@@ -84,7 +84,7 @@ namespace Burinbot.Modules
                 var animeList = new EmbedBuilder()
                 {
                     Color = Color.Green,
-                    Title = "List of favorite animes!",
+                    Title = "List of favorite animes!"
                 };
 
                 if (User.Favorites.Animes.Count > 0)
@@ -105,7 +105,7 @@ namespace Burinbot.Modules
                 var mangaList = new EmbedBuilder()
                 {
                     Color = Color.Green,
-                    Title = "List of favorite mangas!",
+                    Title = "List of favorite mangas!"
                 };
 
                 if (User.Favorites.Mangas.Count > 0)
@@ -123,6 +123,26 @@ namespace Burinbot.Modules
                     }
                 }
 
+                var characterList = new EmbedBuilder()
+                {
+                    Color = Color.Green,
+                    Title = "List of favorite characters!"
+                };
+
+                if(User.Favorites.Characters.Count > 0)
+                {
+                    foreach(var character in User.Favorites.Characters)
+                    {
+                        if (User.Favorites.Characters.Count < 25)
+                            characterList.AddField(x =>
+                            {
+                                x.Name = character.Name;
+                                x.Value = $"{character.URL}";
+                                x.IsInline = false;
+                            });
+                    }
+                }
+
                 //Builds the information about the user
                 await ReplyAsync("", false, userinfo.Build());
 
@@ -130,9 +150,13 @@ namespace Burinbot.Modules
                 if (User.Favorites.Animes.Count > 0)
                     await ReplyAsync("", false, animeList.Build());
 
-                //Buils the favorite manga list
+                //Builds the favorite manga list
                 if (User.Favorites.Mangas.Count > 0)
                     await ReplyAsync("", false, mangaList.Build());
+
+                //Builds the favorite characters list
+                if (User.Favorites.Characters.Count > 0)
+                    await ReplyAsync("", false, characterList.Build());
 
             }
             catch (ArgumentException ae)
