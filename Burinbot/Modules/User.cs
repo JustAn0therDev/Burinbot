@@ -11,7 +11,7 @@ namespace Burinbot.Modules
     {
         [Command("user")]
         [Alias("user")]
-        [Summary("Returns some info about the requested user!")]
+        [Summary("Returns some info about the requested user. The parameter is a MAL username!")]
         public async Task GetUserAsync([Remainder]string user)
         {
             try
