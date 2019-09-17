@@ -36,7 +36,7 @@ namespace Burinbot.Modules
                 if (anime != null)
                     await ReplyAsync($"{Context.User.Mention}, the user scored this anime with {anime.Score}");
                 else
-                    await ReplyAsync($"I didn't find an anime with that name for the specified user. Maybe he/she hasn't gave it a score yet!");
+                    await ReplyAsync($"I didn't find an anime with that name for the specified user. Maybe he/she hasn't given it a score yet!");
             }
             catch (ArgumentNullException aex)
             {
