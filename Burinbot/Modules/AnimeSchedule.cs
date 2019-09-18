@@ -30,7 +30,7 @@ namespace Burinbot.Modules
 
                 foreach (var list in Response.Data.GetType().GetProperties())
                 {
-                    if (list == null && list.Name == dayOfTheWeek)
+                    if (list == null && list.Name.ToLower() == dayOfTheWeek)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {dayOfTheWeek}.");
                         return;
