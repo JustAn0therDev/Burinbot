@@ -15,6 +15,9 @@ namespace Burinbot.Entities
         public string Name { get; set; }
         [DeserializeAs(Name = "mal_id")]
         public int MalID { get; set; }
+        //The Rank property is only used by the TopAnimes module.
+        [DeserializeAs(Name = "rank")]
+        public int Rank { get; set; }
         [DeserializeAs(Name = "url")]
         public string URL { get; set; }
         [DeserializeAs(Name = "title")]

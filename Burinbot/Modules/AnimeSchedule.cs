@@ -3,7 +3,6 @@ using Discord;
 using Discord.Commands;
 using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
@@ -11,7 +10,7 @@ namespace Burinbot.Modules
     public class AnimeSchedule : ModuleBase<SocketCommandContext>
     {
         [Command("animeschedule")]
-        [Summary("Returns the scheduled animes for the specified day!")]
+        [Summary("Returns the scheduled animes for the specified day! It takes a day of the week as a parameter.")]
         public async Task GetScheduledAnimesAsync([Remainder]string dayOfTheWeek)
         {
             try
