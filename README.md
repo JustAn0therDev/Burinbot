@@ -9,5 +9,7 @@ The My Anime List API that is called is an unofficial API and there is no intent
 can be found in the link:
 https://jikan.docs.apiary.io/#introduction/information
 
-Please contact me if there's anything you would have done differently or if you wanna work on the same project with me, I will be happy 
+Please note that you will have to insert a "token.txt" on your repository containing ONLY an OAuth 2.0 token from Discord for it to work. 
+
+Contact me if there's anything you would have done differently or if you wanna work on the same project with me, I will be happy 
 to help.
