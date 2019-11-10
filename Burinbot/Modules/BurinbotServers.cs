@@ -21,7 +21,7 @@ namespace Burinbot.Modules
                 foreach (SocketGuild guild in discordSocketClient.CurrentUser.MutualGuilds)
                     description += $"{guild.Name}\n";
 
-                builder.WithTitle($"Burinbot is currently in { discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
+                builder.WithTitle($"Burinbot is currently in {discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
                     .WithDescription(description).WithColor(Color.Green);
 
                 //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message with the build method.
