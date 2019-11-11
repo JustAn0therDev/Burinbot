@@ -4,6 +4,7 @@ using Discord.Commands;
 using RestSharp;
 using System;
 using System.Threading.Tasks;
+using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
@@ -15,23 +16,17 @@ namespace Burinbot.Modules
         {
             try
             {
-                var builder = new EmbedBuilder()
-                {
-                    Title = "Highest rated animes!",
-                    Color = Color.Green,
-                    Description = "These are the animes I found based on your request!"
-                };
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
 
-                var Client = new RestClient($"https://api.jikan.moe/v3/search/anime?order_by=score");
-                var Response = Client.Execute<AnimeSearch>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/search/anime?order_by=score").Execute<AnimeSearch>(new RestRequest());
 
-                if (Response.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || Response.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
                 }
 
-                if (Response.Data.Results.Count == 0)
+                if (response.Data.Results.Count == 0)
                 {
                     await ReplyAsync("I didn't find any animes. That's weird. :thinking:");
                     return;
@@ -39,7 +34,7 @@ namespace Burinbot.Modules
 
                 AnimeSearch animes = new AnimeSearch();
 
-                foreach (Anime item in Response.Data.Results)
+                foreach (Anime item in response.Data.Results)
                 {
                     if (animes.Results.Count < 25)
                         animes.Results.Add(item);

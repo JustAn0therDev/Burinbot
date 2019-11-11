@@ -1,4 +1,5 @@
 ﻿using Burinbot.Entities;
+using Burinbot.Utils;
 using Discord;
 using Discord.Commands;
 using RestSharp;
@@ -15,23 +16,23 @@ namespace Burinbot.Modules
         {
             try
             {
-                var builder = new EmbedBuilder()
-                {
-                    Title = $"Scheduled animes for {dayOfTheWeek}: ",
-                    Color = Color.Green,
-                    Description = $"These are the scheduled animes for {dayOfTheWeek}"
-                };
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
 
-                var Client = new RestClient($"https://api.jikan.moe/v3/schedule/{dayOfTheWeek}");
-                var Response = Client.Execute<ScheduledAnime>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/schedule/{dayOfTheWeek}").Execute<ScheduledAnime>(new RestRequest());
+
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
+                {
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    return;
+                }
 
                 ScheduledAnime Animes = new ScheduledAnime();
 
-                foreach (var list in Response.Data.GetType().GetProperties())
+                foreach (var list in response.Data.GetType().GetProperties())
                 {
                     if (list == null && list.Name.ToLower() == dayOfTheWeek.ToLower())
                     {
-                        await ReplyAsync($"I didn't find any animes scheduled for {dayOfTheWeek}.");
+                        await ReplyAsync($"I didn't find any animes scheduled for {dayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         return;
                     }
                 }
@@ -39,7 +40,7 @@ namespace Burinbot.Modules
                 switch (dayOfTheWeek.ToLower())
                 {
                     case "monday":
-                        foreach (Anime anime in Response.Data.Monday)
+                        foreach (Anime anime in response.Data.Monday)
                         {
                             if (Animes.Monday.Count < 25)
                                 Animes.Monday.Add(anime);
@@ -57,7 +58,7 @@ namespace Burinbot.Modules
                         break;
 
                     case "tuesday":
-                        foreach (Anime anime in Response.Data.Tuesday)
+                        foreach (Anime anime in response.Data.Tuesday)
                         {
                             if (Animes.Tuesday.Count < 25)
                                 Animes.Tuesday.Add(anime);
@@ -75,7 +76,7 @@ namespace Burinbot.Modules
                         break;
 
                     case "wednesday":
-                        foreach (Anime anime in Response.Data.Wednesday)
+                        foreach (Anime anime in response.Data.Wednesday)
                         {
                             if (Animes.Wednesday.Count < 25)
                                 Animes.Wednesday.Add(anime);
@@ -93,7 +94,7 @@ namespace Burinbot.Modules
                         break;
 
                     case "thursday":
-                        foreach (Anime anime in Response.Data.Thursday)
+                        foreach (Anime anime in response.Data.Thursday)
                         {
                             if (Animes.Thursday.Count < 25)
                                 Animes.Thursday.Add(anime);
@@ -111,7 +112,7 @@ namespace Burinbot.Modules
                         break;
 
                     case "friday":
-                        foreach (Anime anime in Response.Data.Friday)
+                        foreach (Anime anime in response.Data.Friday)
                         {
                             if (Animes.Friday.Count < 25)
                                 Animes.Friday.Add(anime);
@@ -129,7 +130,7 @@ namespace Burinbot.Modules
                         break;
 
                     case "saturday":
-                        foreach (Anime anime in Response.Data.Saturday)
+                        foreach (Anime anime in response.Data.Saturday)
                         {
                             if (Animes.Saturday.Count < 25)
                                 Animes.Saturday.Add(anime);
@@ -147,7 +148,7 @@ namespace Burinbot.Modules
                         break;
 
                     case "sunday":
-                        foreach (Anime anime in Response.Data.Sunday)
+                        foreach (Anime anime in response.Data.Sunday)
                         {
                             if (Animes.Sunday.Count < 25)
                                 Animes.Sunday.Add(anime);

@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Burinbot.Entities;
 using Discord;
+using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
@@ -16,46 +17,31 @@ namespace Burinbot.Modules
         {
             try
             {
-                var userinfo = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Title = "Information about the user!",
-                    Description = "This is the information I found for the user requested:"
-                };
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
+                var animestats = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
+                var animeList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite animes!");
+                var mangaList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite mangas!");
+                var characterList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite characters!");
 
                 string MALUser = user.Replace(" ", "%20");
-                var Client = new RestClient($"https://api.jikan.moe/v3/user/{MALUser}");
-                var requestedUser = Client.Execute<MALUser>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/user/{MALUser}").Execute<MALUser>(new RestRequest());
 
-                if (requestedUser.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || requestedUser.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+                if (!response.StatusCode.Equals((System.Net.HttpStatusCode.OK)))
                 {
-                    await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
                 }
 
-                if (requestedUser.StatusCode.Equals(System.Net.HttpStatusCode.NotFound))
-                {
-                    await ReplyAsync("I didn't find any users with the name you informed me. Did you type his/her name correctly?");
-                    return;
-                }
+                MALUser User = response.Data;
 
-                MALUser User = requestedUser.Data;
-
-                userinfo.AddField(x =>
+                builder.AddField(x =>
                 {
                     x.Name = "General Stats";
                     x.Value = $"Username: {User.Username}\nLink to profile: {User.URL}";
                     x.IsInline = false;
                 });
 
-                var animestats = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Title = "Information about the user!",
-                    Description = "This is the information I found for the user requested:"
-                };
-
-                userinfo.AddField(x =>
+                builder.AddField(x =>
                 {
                     x.Name = "Anime Stats";
                     x.Value =
@@ -68,7 +54,7 @@ namespace Burinbot.Modules
                     x.IsInline = false;
                 });
 
-                userinfo.AddField(x =>
+                builder.AddField(x =>
                 {
                     x.Name = "Manga Stats";
                     x.Value =
@@ -80,12 +66,6 @@ namespace Burinbot.Modules
                     $"Reread mangas: {User.MangaStats.ReRead}\n";
                     x.IsInline = false;
                 });
-
-                var animeList = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Title = "List of favorite animes!"
-                };
 
                 if (User.Favorites.Animes.Count > 0)
                 {
@@ -102,12 +82,6 @@ namespace Burinbot.Modules
                     }
                 }
 
-                var mangaList = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Title = "List of favorite mangas!"
-                };
-
                 if (User.Favorites.Mangas.Count > 0)
                 {
                     foreach (var manga in User.Favorites.Mangas)
@@ -122,12 +96,6 @@ namespace Burinbot.Modules
                             });
                     }
                 }
-
-                var characterList = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Title = "List of favorite characters!"
-                };
 
                 if(User.Favorites.Characters.Count > 0)
                 {
@@ -144,7 +112,7 @@ namespace Burinbot.Modules
                 }
 
                 //Builds the information about the user
-                await ReplyAsync("", false, userinfo.Build());
+                await ReplyAsync("", false, builder.Build());
 
                 //Builds the favorite animes list
                 if (User.Favorites.Animes.Count > 0)

@@ -8,6 +8,7 @@ namespace Burinbot.Modules
     public class Ban : ModuleBase<SocketCommandContext>
     {
         [Command("ban")]
+        [Alias("banmember")]
         [Summary("Bans a member of the server. Must have enough permission on the server to do so.")]
         [RequireUserPermission(Discord.GuildPermission.BanMembers)]
         [RequireBotPermission(Discord.GuildPermission.BanMembers)]

@@ -3,6 +3,7 @@ using Discord.Commands;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
@@ -22,15 +23,11 @@ namespace Burinbot.Modules
         {
             try
             {
-                var builder = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Description = "These are the available commands:"
-                };
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
 
                 foreach (var module in _service.Modules)
                 {
-                    string description = null;
+                    string description = "";
                     foreach (var cmd in module.Commands)
                     {
                         var result = await cmd.CheckPreconditionsAsync(Context);

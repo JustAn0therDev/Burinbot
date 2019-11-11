@@ -24,5 +24,7 @@ namespace Burinbot.Entities
         public int Chapters { get; set; }
         [DeserializeAs(Name = "score")]
         public decimal Score { get; set; }
+        [DeserializeAs(Name = "rank")]
+        public int Rank { get; set; }
     }
 }

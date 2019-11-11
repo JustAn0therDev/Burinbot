@@ -1,4 +1,5 @@
 ﻿using Burinbot.Entities;
+using Burinbot.Utils;
 using Discord;
 using Discord.Commands;
 using RestSharp;
@@ -15,23 +16,17 @@ namespace Burinbot.Modules
         {
             try
             {
-                var builder = new EmbedBuilder()
-                {
-                    Title = "Highest rated mangas!",
-                    Color = Color.Green,
-                    Description = "These are the mangas I found based on your request!"
-                };
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
 
-                var Client = new RestClient($"https://api.jikan.moe/v3/search/manga?order_by=score");
-                var Response = Client.Execute<MangaSearch>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/search/manga?order_by=score").Execute<MangaSearch>(new RestRequest());
 
-                if (Response.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || Response.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
                 }
 
-                if (Response.Data.Results.Count == 0)
+                if (response.Data.Results.Count == 0)
                 {
                     await ReplyAsync("I didn't find any mangas. That's weird. :thinking:");
                     return;
@@ -39,7 +34,7 @@ namespace Burinbot.Modules
 
                 MangaSearch mangas = new MangaSearch();
 
-                foreach (Manga item in Response.Data.Results)
+                foreach (Manga item in response.Data.Results)
                 {
                     if (mangas.Results.Count < 25)
                         mangas.Results.Add(item);

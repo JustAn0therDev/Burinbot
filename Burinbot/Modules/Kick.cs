@@ -8,14 +8,14 @@ namespace Burinbot.Modules
     public class Kick : ModuleBase<SocketCommandContext>
     {
         [Command("kick")]
-        [Summary("Kicks a member of the server. Burinbot must have permission to kick somebody.")]
+        [Summary("Kicks a member of the server. Burinbot must have permission to kick somebody and you should as well.")]
         [RequireUserPermission(Discord.GuildPermission.KickMembers)]
         [RequireBotPermission(Discord.GuildPermission.KickMembers)]
-        public async Task KickAsync(SocketGuildUser user)
+        public async Task KickAsync(SocketGuildUser requestedUser)
         {
             try
             {
-                await user.KickAsync();
+                await requestedUser.KickAsync();
                 await ReplyAsync($"{Context.User.Mention}, the requested user has been kicked from this server.");
             }
             catch (ArgumentNullException anex)

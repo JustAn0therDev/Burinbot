@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using System.Linq;
 using Burinbot.Entities;
+using Burinbot.Utils;
 using System;
 
 namespace Burinbot.Modules
@@ -16,42 +17,36 @@ namespace Burinbot.Modules
         {
             try
             {
-                var builder = new EmbedBuilder()
-                {
-                    Color = Color.Green,
-                    Description = "These are the animes I found based on what you told me:"
-                };
-
-                AnimeSearch searchList = new AnimeSearch();
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
 
                 //This first search is made because the API does not have a route that accepts a string as an argument to get recommendations.
                 string search = animeName.Replace(" ", "%20");
-                var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
-                var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}").Execute<AnimeSearch>(new RestRequest());
 
-                if (requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
                 }
 
-                if (requestedAnime.Data == null || requestedAnime.Data.Results.Count == 0)
+                if (response.Data == null || response.Data.Results.Count == 0)
                 {
                     await ReplyAsync("I didn't find any recommendations. Did you type the anime's name correctly?");
                     return;
                 }
 
-                foreach (var anime in requestedAnime.Data.Results)
-                    searchList.Results.Add(anime);
+                AnimeSearch searchList = new AnimeSearch();
 
+                foreach (var anime in response.Data.Results)
+                    searchList.Results.Add(anime);
 
                 AnimeList RecommendationList = new AnimeList();
 
                 //Selects the first item of the list to search.
                 int malID = searchList.Results.First().MalID;
 
-                var finalClient = new RestClient($"https://api.jikan.moe/v3/anime/{malID}/recommendations");
-                var finalResponse = finalClient.Execute<AnimeList>(new RestRequest());
+                var finalResponse = new RestClient($"https://api.jikan.moe/v3/anime/{malID}/recommendations").Execute<AnimeList>(new RestRequest());
+
                 foreach (var anime in finalResponse.Data.Recommendations)
                 {
                     //Limits the size of the list to 25 so Discord can render the embed list.
@@ -68,6 +63,7 @@ namespace Burinbot.Modules
                         x.IsInline = false;
                     });
                 }
+
                 await ReplyAsync("", false, builder.Build());
             }
             catch (ArgumentException aex)

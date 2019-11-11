@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
@@ -12,8 +13,15 @@ namespace Burinbot.Modules
         [RequireBotPermission(Discord.GuildPermission.ChangeNickname)]
         public async Task ChangeNicknameAsync(SocketGuildUser user, [Remainder]string nickname)
         {
-            await user.ModifyAsync(x => x.Nickname = nickname);
-            await ReplyAsync($"{Context.User.Mention}, the mentioned user's nickname has been changed as you requested.");
+            try
+            {
+                await user.ModifyAsync(x => x.Nickname = nickname);
+                await ReplyAsync($"{Context.User.Mention}, the mentioned user's nickname has been changed as you requested.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

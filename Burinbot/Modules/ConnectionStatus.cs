@@ -15,10 +15,6 @@ namespace Burinbot.Modules
             {
                 await ReplyAsync($"{Context.User.Mention}, your status is now: {Context.User.Status.ToString()}");
             }
-            catch (ArgumentNullException aex)
-            {
-                Console.WriteLine(aex.Message);
-            }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
