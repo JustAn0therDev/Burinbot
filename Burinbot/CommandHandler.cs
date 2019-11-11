@@ -16,7 +16,6 @@ namespace Burinbot
             _commands = commands;
             _client = client;
         }
-
         public async Task InstallCommandsAsync()
         {
             _client.MessageReceived += HandleCommandAsync;

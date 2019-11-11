@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Burinbot.Entities;
 using System.Linq;
 using System;
+using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
@@ -17,22 +18,21 @@ namespace Burinbot.Modules
             try
             {
                 mangaName = mangaName.Replace(" ", "%20");
-                var Client = new RestClient($"https://api.jikan.moe/v3/user/{user}/mangalist?search={mangaName}");
-                var RequestedManga = Client.Execute<UserMangaList>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/user/{user}/mangalist?search={mangaName}").Execute<UserMangaList>(new RestRequest());
 
-                if (RequestedManga.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || RequestedManga.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
                 }
 
-                if (RequestedManga.Data.UserMangas.Count == 0)
+                if (response.Data.UserMangas.Count == 0)
                 {
                     await ReplyAsync("I didn't find any mangas based on the user and anime name you informed me. Did you type its name correctly?");
                     return;
                 }
 
-                UserManga manga = RequestedManga.Data.UserMangas.First();
+                UserManga manga = response.Data.UserMangas.First();
 
                 if (manga != null)
                     await ReplyAsync($"{Context.User.Mention}, the user scored this manga with {manga.Score}");

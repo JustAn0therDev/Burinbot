@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using RestSharp;
 using Discord;
 using Burinbot.Entities;
-using System.Collections.Generic;
+using Burinbot.Utils;
+using System;
 
 namespace Burinbot.Modules
 {
@@ -13,35 +14,41 @@ namespace Burinbot.Modules
         [Summary("Returns a list of the top rated animes in MAL!")]
         public async Task GetTopAnimesAsync()
         {
-            var builder = new EmbedBuilder()
+            try
             {
-                Title = "Top animes!",
-                Description = "Here are the top animes I found!",
-                Color = Color.Green
-            };
+                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
 
-            var Client = new RestClient("https://api.jikan.moe/v3/top/anime");
-            var Response = Client.Execute<TopAnimes>(new RestRequest());
+                var response = new RestClient("https://api.jikan.moe/v3/top/anime").Execute<TopAnimes>(new RestRequest());
 
-            TopAnimes topAnimes = new TopAnimes();
-
-            foreach (var anime in Response.Data.Top)
-            {
-                if (topAnimes.Top.Count < 25)
-                    topAnimes.Top.Add(anime);
-            }
-
-            foreach (var anime in topAnimes.Top)
-            {
-                builder.AddField(x =>
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    x.Name = anime.Title ?? anime.Name;
-                    x.Value = $"Rank: {anime.Rank}";
-                    x.IsInline = false;
-                });
-            }
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                }
 
-            await ReplyAsync("", false, builder.Build());
+                TopAnimes topAnimes = new TopAnimes();
+
+                foreach (var anime in response.Data.Top)
+                {
+                    if (topAnimes.Top.Count < 25)
+                        topAnimes.Top.Add(anime);
+                }
+
+                foreach (var anime in topAnimes.Top)
+                {
+                    builder.AddField(x =>
+                    {
+                        x.Name = anime.Title ?? anime.Name;
+                        x.Value = $"Rank: {anime.Rank}";
+                        x.IsInline = false;
+                    });
+                }
+
+                await ReplyAsync("", false, builder.Build());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Burinbot.Entities;
 using System.Linq;
 using System;
+using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
@@ -16,22 +17,21 @@ namespace Burinbot.Modules
         {
             try
             {
-                var Client = new RestClient($"https://api.jikan.moe/v3/user/{user}/animelist?search={animeName.Replace(" ", "%20")}");
-                var RequestedAnimes = Client.Execute<UserAnimeList>(new RestRequest());
+                var response = new RestClient($"https://api.jikan.moe/v3/user/{user}/animelist?search={animeName.Replace(" ", "%20")}").Execute<UserAnimeList>(new RestRequest());
 
-                if (RequestedAnimes.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || RequestedAnimes.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
                 }
 
-                if (RequestedAnimes.Data.UserAnimes.Count == 0)
+                if (response.Data.UserAnimes.Count == 0)
                 {
                     await ReplyAsync("I didn't find any animes based on the user and anime name you informed me. Did you type its name correctly?");
                     return;
                 }
 
-                UserAnime anime = RequestedAnimes.Data.UserAnimes.First();
+                UserAnime anime = response.Data.UserAnimes.First();
 
                 if (anime != null)
                     await ReplyAsync($"{Context.User.Mention}, the user scored this anime with {anime.Score}");

@@ -3,6 +3,7 @@ using Discord.Commands;
 using RestSharp;
 using System.Linq;
 using System.Threading.Tasks;
+using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
@@ -13,23 +14,21 @@ namespace Burinbot.Modules
         public async Task GetAnimeSummaryAsync([Remainder]string animeName)
         {
             string search = animeName.Replace(" ", "%20");
-            var firstClient = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}");
-            var requestedAnime = firstClient.Execute<AnimeSearch>(new RestRequest());
+            var response = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}").Execute<AnimeSearch>(new RestRequest());
 
-            if (requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.BadRequest) || requestedAnime.StatusCode.Equals(System.Net.HttpStatusCode.InternalServerError))
+            if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
             {
-                await ReplyAsync("There was an error on the API request. Please call my dad. I need an adult.");
+                await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                 return;
             }
 
-            if (requestedAnime.Data == null || requestedAnime.Data.Results.Count == 0)
+            if (response.Data == null || response.Data.Results.Count == 0)
             {
                 await ReplyAsync("I couldn't find any information about the informed anime. Did you type it's name correctly?");
                 return;
             }
 
-            //There is no exception treatment in this case because the .NET Core compiler will already do that for us by default.
-            Anime AnimeResult = requestedAnime.Data.Results.First();
+            Anime AnimeResult = response.Data.Results.First();
 
             await ReplyAsync(
                 $"{AnimeResult.Title}\nMore Info: {AnimeResult.URL}\nSynopsis: {AnimeResult.Synopsis}\nEpisodes: {AnimeResult.Episodes}\nScore: {AnimeResult.Score}"
