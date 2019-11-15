@@ -31,7 +31,7 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                UserAnime anime = response.Data.UserAnimes.First();
+                UserAnime anime = response.Data.UserAnimes[0];
 
                 if (anime != null)
                     await ReplyAsync($"{Context.User.Mention}, the user scored this anime with {anime.Score}");

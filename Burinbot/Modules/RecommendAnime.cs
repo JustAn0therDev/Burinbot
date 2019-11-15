@@ -15,9 +15,12 @@ namespace Burinbot.Modules
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]
         public async Task GetAnimeRecommendationsAsync([Remainder]string animeName)
         {
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
+            AnimeSearch searchList = new AnimeSearch();
+            AnimeList RecommendationList = new AnimeList();
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
 
                 //This first search is made because the API does not have a route that accepts a string as an argument to get recommendations.
                 string search = animeName.Replace(" ", "%20");
@@ -35,24 +38,26 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                AnimeSearch searchList = new AnimeSearch();
-
                 foreach (var anime in response.Data.Results)
                     searchList.Results.Add(anime);
 
-                AnimeList RecommendationList = new AnimeList();
-
                 //Selects the first item of the list to search.
-                int malID = searchList.Results.First().MalID;
+                int malID = searchList.Results[0].MalID;
 
                 var finalResponse = new RestClient($"https://api.jikan.moe/v3/anime/{malID}/recommendations").Execute<AnimeList>(new RestRequest());
 
-                foreach (var anime in finalResponse.Data.Recommendations)
+                if (finalResponse.Data.Recommendations.Count > 0)
+                    foreach (var anime in finalResponse.Data.Recommendations)
+                    {
+                        //Limits the size of the list to 25 so Discord can render the embed list.
+                        if (RecommendationList.Recommendations.Count < 25)
+                            RecommendationList.Recommendations.Add(anime);
+                    }
+                else
                 {
-                    //Limits the size of the list to 25 so Discord can render the embed list.
-                    if (RecommendationList.Recommendations.Count < 25)
-                        RecommendationList.Recommendations.Add(anime);
-                }
+                    await ReplyAsync("The anime was found but there are no recommendations like it.");
+                    return;
+                } 
 
                 foreach (var anime in RecommendationList.Recommendations)
                 {

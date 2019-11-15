@@ -7,15 +7,25 @@ namespace Burinbot
 {
     public class CommandHandler
     {
+        #region Private Props
+
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
 
-        // Retrieve client and CommandService instance via ctor
+        #endregion
+
+        #region Constructors
+
         public CommandHandler(DiscordSocketClient client, CommandService commands)
         {
             _commands = commands;
             _client = client;
         }
+
+        #endregion
+
+        #region Public Methods
+
         public async Task InstallCommandsAsync()
         {
             _client.MessageReceived += HandleCommandAsync;
@@ -24,6 +34,9 @@ namespace Burinbot
                                             services: null);
         }
 
+        #endregion
+
+        #region Private Methods
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
@@ -43,5 +56,6 @@ namespace Burinbot
                 argPos: argPos,
                 services: null);
         }
+        #endregion
     }
 }

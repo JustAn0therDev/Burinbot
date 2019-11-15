@@ -14,10 +14,11 @@ namespace Burinbot.Modules
         [Summary("Returns a list with 25 of the highest scored animes!")]
         public async Task GetHighScoreMangasAsync()
         {
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
+            MangaSearch mangas = new MangaSearch();
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
-
                 var response = new RestClient($"https://api.jikan.moe/v3/search/manga?order_by=score").Execute<MangaSearch>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
@@ -31,8 +32,6 @@ namespace Burinbot.Modules
                     await ReplyAsync("I didn't find any mangas. That's weird. :thinking:");
                     return;
                 }
-
-                MangaSearch mangas = new MangaSearch();
 
                 foreach (Manga item in response.Data.Results)
                 {

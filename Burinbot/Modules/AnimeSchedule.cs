@@ -5,6 +5,7 @@ using Discord.Commands;
 using RestSharp;
 using System;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Burinbot.Modules
 {
@@ -14,19 +15,22 @@ namespace Burinbot.Modules
         [Summary("Returns the scheduled animes for the specified day! It takes a day of the week as a parameter.")]
         public async Task GetScheduledAnimesAsync([Remainder]string dayOfTheWeek)
         {
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
+            BurinbotUtils burinbotUtils = new BurinbotUtils(new Stopwatch());
+            ScheduledAnime Animes = new ScheduledAnime();
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
+                burinbotUtils.StartPerformanceTest();
 
                 var response = new RestClient($"https://api.jikan.moe/v3/schedule/{dayOfTheWeek}").Execute<ScheduledAnime>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
                     await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    burinbotUtils.EndAndLogPerformanceTest();
                     return;
                 }
-
-                ScheduledAnime Animes = new ScheduledAnime();
 
                 foreach (var list in response.Data.GetType().GetProperties())
                 {
@@ -167,6 +171,7 @@ namespace Burinbot.Modules
                 }
 
                 await ReplyAsync("", false, builder.Build());
+                burinbotUtils.EndAndLogPerformanceTest();
             }
             catch (ArgumentNullException anex)
             {

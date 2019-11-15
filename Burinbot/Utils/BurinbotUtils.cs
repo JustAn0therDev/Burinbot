@@ -1,9 +1,28 @@
-﻿using Discord;
+﻿using System;
+using Discord;
+using System.Diagnostics;
 
 namespace Burinbot.Utils
 {
-    public static class BurinbotUtils
+    public class BurinbotUtils
     {
+        #region Private Props
+
+        private readonly Stopwatch _stopwatch;
+
+        #endregion
+
+        #region Constructors
+
+        public BurinbotUtils(Stopwatch stopwatch)
+        {
+            _stopwatch = stopwatch;
+        }
+
+        #endregion
+
+        #region Public Methods
+
         public static EmbedBuilder GenerateDiscordEmbedMessage(string title, Color color, string description)
         {
             return new EmbedBuilder()
@@ -31,5 +50,25 @@ namespace Burinbot.Utils
                     return "Something happened and I couldn't complete your request. Please try again!";
             }
         }
+
+        public void StartPerformanceTest()
+        {
+            _stopwatch.Start();
+        }
+
+        public void EndAndLogPerformanceTest()
+        {
+            try
+            {
+                _stopwatch.Stop();
+                Console.WriteLine($"Performance monitoring ended. Elapsed time until the end of command execution: {_stopwatch.ElapsedMilliseconds}ms");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }

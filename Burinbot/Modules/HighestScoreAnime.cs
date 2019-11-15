@@ -14,10 +14,10 @@ namespace Burinbot.Modules
         [Summary("Returns a list with 25 of the highest scored animes!")]
         public async Task GetHighScoreAnimesAsync()
         {
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
-
                 var response = new RestClient($"https://api.jikan.moe/v3/search/anime?order_by=score").Execute<AnimeSearch>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))

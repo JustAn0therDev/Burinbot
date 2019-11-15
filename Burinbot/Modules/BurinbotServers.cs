@@ -16,6 +16,7 @@ namespace Burinbot.Modules
             DiscordSocketClient discordSocketClient = Context.Client;
             EmbedBuilder builder = new EmbedBuilder();
             var description = "";
+
             try
             {
                 foreach (SocketGuild guild in discordSocketClient.CurrentUser.MutualGuilds)

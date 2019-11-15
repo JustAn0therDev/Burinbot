@@ -16,16 +16,16 @@ namespace Burinbot.Modules
         [Summary("Returns a list of mangas based on the informed name from MyAnimeList.")]
         public async Task GetMangaRecommendationsAsync([Remainder]string mangaName)
         {
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
+            MangaSearch searchList = new MangaSearch();
+            MangaList RecommendationList = new MangaList();
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
-
-                MangaSearch searchList = new MangaSearch();
-
                 string search = mangaName.Replace(" ", "%20");
                 var response = new RestClient($"https://api.jikan.moe/v3/search/manga?q={search}").Execute<MangaSearch>(new RestRequest());
 
-                if (response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
+                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
                     await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                     return;
@@ -40,19 +40,19 @@ namespace Burinbot.Modules
                 foreach (var manga in response.Data.Results)
                     searchList.Results.Add(manga);
 
-                MangaList RecommendationList = new MangaList();
-                var finalResponse = new RestClient($"https://api.jikan.moe/v3/manga/{searchList.Results.First().MalID}/recommendations").Execute<MangaList>(new RestRequest());
+                var finalResponse = new RestClient($"https://api.jikan.moe/v3/manga/{searchList.Results[0].MalID}/recommendations").Execute<MangaList>(new RestRequest());
 
-                foreach (var manga in finalResponse.Data.Recommendations)
+                if (finalResponse.Data.Recommendations.Count > 0)
+                    foreach (var manga in finalResponse.Data.Recommendations)
+                    {
+                        //Limits the size of the list to 25 so Discord can render the embed list.
+                        if (RecommendationList.Recommendations.Count < 25)
+                            RecommendationList.Recommendations.Add(manga);
+                    }
+                else
                 {
-                    //Limits the size of the list to 25 so Discord can render the embed list.
-                    if (RecommendationList.Recommendations.Count < 25)
-                        RecommendationList.Recommendations.Add(manga);
+                    await ReplyAsync("The manga was found but there are no recommendations like it.");
                 }
-
-                if (RecommendationList.Recommendations.Count == 0)
-                    await ReplyAsync("I couldn't find any recommendations based on the manga you informed.");
-
 
                 foreach (var recommendation in RecommendationList.Recommendations)
                 {

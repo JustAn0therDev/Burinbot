@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Burinbot.Entities;
 using Discord;
 using Burinbot.Utils;
+using System.Diagnostics;
 
 namespace Burinbot.Modules
 {
@@ -15,20 +16,23 @@ namespace Burinbot.Modules
         [Summary("Returns some info about the requested user. The parameter is a MAL username!")]
         public async Task GetUserAsync([Remainder]string user)
         {
+            BurinbotUtils burinbotUtils = new BurinbotUtils(new Stopwatch());
+
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
+            var animeList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite animes!");
+            var mangaList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite mangas!");
+            var characterList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite characters!");
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
-                var animestats = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
-                var animeList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite animes!");
-                var mangaList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite mangas!");
-                var characterList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite characters!");
-
+                burinbotUtils.StartPerformanceTest();
                 string MALUser = user.Replace(" ", "%20");
                 var response = new RestClient($"https://api.jikan.moe/v3/user/{MALUser}").Execute<MALUser>(new RestRequest());
 
                 if (!response.StatusCode.Equals((System.Net.HttpStatusCode.OK)))
                 {
                     await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    burinbotUtils.EndAndLogPerformanceTest();
                     return;
                 }
 
@@ -89,7 +93,6 @@ namespace Burinbot.Modules
                         if (User.Favorites.Mangas.Count < 25)
                             mangaList.AddField(x =>
                             {
-                                //Since the anime or manga object this time doesn't have a title, but has a name, we use the two inside the same class for simplicity's sake.
                                 x.Name = manga.Name;
                                 x.Value = manga.URL;
                                 x.IsInline = false;
@@ -125,6 +128,8 @@ namespace Burinbot.Modules
                 //Builds the favorite characters list
                 if (User.Favorites.Characters.Count > 0)
                     await ReplyAsync("", false, characterList.Build());
+
+                burinbotUtils.EndAndLogPerformanceTest();
 
             }
             catch (ArgumentException ae)

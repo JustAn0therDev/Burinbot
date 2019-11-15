@@ -14,18 +14,17 @@ namespace Burinbot.Modules
         [Summary("Returns a list of the top rated animes in MAL!")]
         public async Task GetTopAnimesAsync()
         {
+            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
+            TopAnimes topAnimes = new TopAnimes();
+
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
-
                 var response = new RestClient("https://api.jikan.moe/v3/top/anime").Execute<TopAnimes>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
                     await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                 }
-
-                TopAnimes topAnimes = new TopAnimes();
 
                 foreach (var anime in response.Data.Top)
                 {
