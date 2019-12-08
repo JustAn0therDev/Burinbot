@@ -11,15 +11,7 @@ namespace Burinbot.Modules
         public async Task FindLoveAsync()
         {
             Random rnd = new Random();
-            try
-            {
-                await ReplyAsync(rnd.Next(1, 290000).ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
+            await ReplyAsync(rnd.Next(1, 290000).ToString());
         }
     }
 }
