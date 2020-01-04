@@ -2,7 +2,6 @@
 using RestSharp;
 using System.Threading.Tasks;
 using Burinbot.Entities;
-using System.Linq;
 using System;
 using Burinbot.Utils;
 
@@ -31,7 +30,7 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                UserAnime anime = response.Data.UserAnimes[0];
+                var anime = response.Data.UserAnimes[0];
 
                 if (anime != null)
                     await ReplyAsync($"{Context.User.Mention}, the user scored this anime with {anime.Score}");

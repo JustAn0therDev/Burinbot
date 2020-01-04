@@ -16,9 +16,9 @@ namespace Burinbot.Modules
         [Summary("Returns some info about the requested user. The parameter is a MAL username!")]
         public async Task GetUserAsync([Remainder]string user)
         {
-            BurinbotUtils burinbotUtils = new BurinbotUtils(new Stopwatch());
+            var burinbotUtils = new BurinbotUtils(new Stopwatch());
 
-            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
+            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
             var animeList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite animes!");
             var mangaList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite mangas!");
             var characterList = BurinbotUtils.GenerateDiscordEmbedMessage("", Color.Green, "List of favorite characters!");

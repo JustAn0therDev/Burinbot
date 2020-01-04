@@ -13,9 +13,9 @@ namespace Burinbot.Modules
         [Summary("Returns a list of servers in which Burinbot is currently in.")]
         public async Task GetRegaliaServers()
         {
-            DiscordSocketClient discordSocketClient = Context.Client;
-            EmbedBuilder builder = new EmbedBuilder();
-            var description = "";
+            var discordSocketClient = Context.Client;
+            var builder = new EmbedBuilder();
+            string description = "";
 
             try
             {

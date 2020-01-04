@@ -2,7 +2,6 @@
 using RestSharp;
 using System.Threading.Tasks;
 using Discord;
-using System.Linq;
 using Burinbot.Entities;
 using Burinbot.Utils;
 using System;

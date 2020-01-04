@@ -35,7 +35,7 @@ namespace Burinbot.Modules
             {
                 burinbotUtils.StartPerformanceTest();
 
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
+                var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
 
                 foreach (var module in _service.Modules)
                 {

@@ -15,8 +15,8 @@ namespace Burinbot.Modules
         [Summary("Returns the scheduled animes for the specified day! It takes a day of the week as a parameter.")]
         public async Task GetScheduledAnimesAsync([Remainder]string dayOfTheWeek)
         {
-            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
-            BurinbotUtils burinbotUtils = new BurinbotUtils(new Stopwatch());
+            var builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
+            var burinbotUtils = new BurinbotUtils(new Stopwatch());
             ScheduledAnime Animes = new ScheduledAnime();
 
             try
@@ -44,12 +44,12 @@ namespace Burinbot.Modules
                 switch (dayOfTheWeek.ToLower())
                 {
                     case "monday":
-                        foreach (Anime anime in response.Data.Monday)
+                        foreach (var anime in response.Data.Monday)
                         {
                             if (Animes.Monday.Count < 25)
                                 Animes.Monday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Monday)
+                        foreach (var anime in Animes.Monday)
                         {
                             builder.AddField(x =>
                             {
@@ -62,12 +62,12 @@ namespace Burinbot.Modules
                         break;
 
                     case "tuesday":
-                        foreach (Anime anime in response.Data.Tuesday)
+                        foreach (var anime in response.Data.Tuesday)
                         {
                             if (Animes.Tuesday.Count < 25)
                                 Animes.Tuesday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Tuesday)
+                        foreach (var anime in Animes.Tuesday)
                         {
                             builder.AddField(x =>
                             {
@@ -80,12 +80,12 @@ namespace Burinbot.Modules
                         break;
 
                     case "wednesday":
-                        foreach (Anime anime in response.Data.Wednesday)
+                        foreach (var anime in response.Data.Wednesday)
                         {
                             if (Animes.Wednesday.Count < 25)
                                 Animes.Wednesday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Wednesday)
+                        foreach (var anime in Animes.Wednesday)
                         {
                             builder.AddField(x =>
                             {
@@ -98,12 +98,12 @@ namespace Burinbot.Modules
                         break;
 
                     case "thursday":
-                        foreach (Anime anime in response.Data.Thursday)
+                        foreach (var anime in response.Data.Thursday)
                         {
                             if (Animes.Thursday.Count < 25)
                                 Animes.Thursday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Thursday)
+                        foreach (var anime in Animes.Thursday)
                         {
                             builder.AddField(x =>
                             {
@@ -116,12 +116,12 @@ namespace Burinbot.Modules
                         break;
 
                     case "friday":
-                        foreach (Anime anime in response.Data.Friday)
+                        foreach (var anime in response.Data.Friday)
                         {
                             if (Animes.Friday.Count < 25)
                                 Animes.Friday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Friday)
+                        foreach (var anime in Animes.Friday)
                         {
                             builder.AddField(x =>
                             {
@@ -134,12 +134,12 @@ namespace Burinbot.Modules
                         break;
 
                     case "saturday":
-                        foreach (Anime anime in response.Data.Saturday)
+                        foreach (var anime in response.Data.Saturday)
                         {
                             if (Animes.Saturday.Count < 25)
                                 Animes.Saturday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Saturday)
+                        foreach (var anime in Animes.Saturday)
                         {
                             builder.AddField(x =>
                             {
@@ -152,12 +152,12 @@ namespace Burinbot.Modules
                         break;
 
                     case "sunday":
-                        foreach (Anime anime in response.Data.Sunday)
+                        foreach (var anime in response.Data.Sunday)
                         {
                             if (Animes.Sunday.Count < 25)
                                 Animes.Sunday.Add(anime);
                         }
-                        foreach (Anime anime in Animes.Sunday)
+                        foreach (var anime in Animes.Sunday)
                         {
                             builder.AddField(x =>
                             {
