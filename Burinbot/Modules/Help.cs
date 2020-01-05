@@ -16,10 +16,12 @@ namespace Burinbot.Modules
         #endregion
 
         #region Constructors
+
         public Help(CommandService service)
         {
             _service = service;
         }
+
         #endregion
 
         #region Public Methods

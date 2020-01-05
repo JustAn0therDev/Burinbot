@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Burinbot.Entities;
 using System;
 using Burinbot.Utils;
+using System.Linq;
 
 namespace Burinbot.Modules
 {
@@ -16,7 +17,9 @@ namespace Burinbot.Modules
         {
             try
             {
-                var response = new RestClient($"https://api.jikan.moe/v3/user/{user}/animelist?search={animeName.Replace(" ", "%20")}").Execute<UserAnimeList>(new RestRequest());
+                var client = new RestClient($"https://api.jikan.moe/v3/user/{user}/animelist?search={animeName.Replace(" ", "%20")}");
+                var request = new RestRequest(Method.GET);
+                var response = client.Execute<UserAnimeList>(request);
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
@@ -26,7 +29,7 @@ namespace Burinbot.Modules
 
                 if (response.Data.UserAnimes.Count == 0)
                 {
-                    await ReplyAsync("I didn't find any animes based on the user and anime name you informed me. Did you type its name correctly?");
+                    await ReplyAsync("I didn't find any animes based on the user and anime name you informed me. Did you mean something else?");
                     return;
                 }
 

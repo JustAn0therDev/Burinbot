@@ -13,7 +13,7 @@ namespace Burinbot.Modules
         {
             try
             {
-                await ReplyAsync($"{Context.User.Mention}, your status is now: {Context.User.Status.ToString()}");
+                await ReplyAsync($"{Context.User.Mention}, your status is now: {Context.User.Status}");
             }
             catch(Exception ex)
             {
