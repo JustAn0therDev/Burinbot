@@ -26,13 +26,13 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                Parallel.ForEach(response.Data.Top, manga =>
+                foreach (var anime in response.Data.Top)
                 {
                     if (topMangas.Top.Count < 25)
-                        topMangas.Top.Add(manga);
-                });
+                        topMangas.Top.Add(anime);
+                }
 
-                Parallel.ForEach(topMangas.Top, manga =>
+                foreach (var manga in topMangas.Top)
                 {
                     builder.AddField(x =>
                     {
@@ -40,7 +40,7 @@ namespace Burinbot.Modules
                         x.Value = $"Rank: {manga.Rank}";
                         x.IsInline = false;
                     });
-                });
+                }
 
                 await ReplyAsync("", false, builder.Build());
             }

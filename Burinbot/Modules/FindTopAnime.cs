@@ -27,30 +27,23 @@ namespace Burinbot.Modules
                     await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                 }
 
-                Parallel.ForEach(response.Data.Top, anime => 
+                foreach (var anime in response.Data.Top)
                 {
                     if (topAnimes.Top.Count < 25)
                         topAnimes.Top.Add(anime);
-                });
+                }
 
-                if (topAnimes.Top != null && topAnimes.Top.Count > 0)
+                foreach (var anime in topAnimes.Top)
                 {
-                    Parallel.ForEach(topAnimes.Top, anime =>
+                    builder.AddField(x =>
                     {
-                        builder.AddField(x =>
-                        {
-                            x.Name = anime.Title;
-                            x.Value = $"Rank: {anime.Rank}";
-                            x.IsInline = false;
-                        });
+                        x.Name = anime.Title ?? anime.Name;
+                        x.Value = $"Rank: {anime.Rank}";
+                        x.IsInline = false;
                     });
+                }
 
-                    await ReplyAsync("", false, builder.Build());
-                }
-                else
-                {
-                    await ReplyAsync("No animes were found in the list of Top Animes of MAL.");
-                }
+                await ReplyAsync("", false, builder.Build());
             }
             catch (Exception ex)
             {
