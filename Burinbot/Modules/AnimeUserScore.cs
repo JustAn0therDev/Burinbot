@@ -40,10 +40,6 @@ namespace Burinbot.Modules
                 else
                     await ReplyAsync($"I didn't find an anime with that name for the specified user. Maybe he/she hasn't given it a score yet!");
             }
-            catch (ArgumentNullException aex)
-            {
-                Console.WriteLine(aex.Message);
-            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);

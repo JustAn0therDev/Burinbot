@@ -32,7 +32,7 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                UserManga manga = response.Data.UserMangas[0];
+                var manga = response.Data.UserMangas[0];
 
                 if (manga != null)
                     await ReplyAsync($"{Context.User.Mention}, the user scored this manga with {manga.Score}");

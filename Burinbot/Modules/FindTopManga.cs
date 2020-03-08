@@ -17,7 +17,7 @@ namespace Burinbot.Modules
             try
             {
                 EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top mangas!", Color.Green, "Here are the top mangas I found!");
-
+                var topMangas = new TopMangas();
                 var response = new RestClient("https://api.jikan.moe/v3/top/manga").Execute<TopMangas>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
@@ -26,15 +26,13 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                TopMangas topMangas = new TopMangas();
-
-                foreach (var manga in response.Data.Top)
+                Parallel.ForEach(response.Data.Top, manga =>
                 {
                     if (topMangas.Top.Count < 25)
                         topMangas.Top.Add(manga);
-                }
+                });
 
-                foreach (var manga in topMangas.Top)
+                Parallel.ForEach(topMangas.Top, manga =>
                 {
                     builder.AddField(x =>
                     {
@@ -42,7 +40,7 @@ namespace Burinbot.Modules
                         x.Value = $"Rank: {manga.Rank}";
                         x.IsInline = false;
                     });
-                }
+                });
 
                 await ReplyAsync("", false, builder.Build());
             }

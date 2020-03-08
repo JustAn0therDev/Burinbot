@@ -26,7 +26,7 @@ namespace Burinbot.Modules
             try
             {
                 burinbotUtils.StartPerformanceTest();
-                string MALUser = user.Replace(" ", "%20");
+                var MALUser = user.Replace(" ", "%20");
                 var response = new RestClient($"https://api.jikan.moe/v3/user/{MALUser}").Execute<MALUser>(new RestRequest());
 
                 if (!response.StatusCode.Equals((System.Net.HttpStatusCode.OK)))
@@ -36,7 +36,7 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                MALUser User = response.Data;
+                var User = response.Data;
 
                 builder.AddField(x =>
                 {
@@ -73,7 +73,7 @@ namespace Burinbot.Modules
 
                 if (User.Favorites.Animes.Count > 0)
                 {
-                    foreach (var anime in User.Favorites.Animes)
+                    Parallel.ForEach(User.Favorites.Animes, anime =>
                     {
                         if (User.Favorites.Animes.Count < 25)
                             animeList.AddField(x =>
@@ -83,26 +83,27 @@ namespace Burinbot.Modules
                                 x.Value = anime.URL;
                                 x.IsInline = false;
                             });
-                    }
+                    });
                 }
 
                 if (User.Favorites.Mangas.Count > 0)
                 {
-                    foreach (var manga in User.Favorites.Mangas)
+                    Parallel.ForEach(User.Favorites.Mangas, manga =>
                     {
-                        if (User.Favorites.Mangas.Count < 25)
-                            mangaList.AddField(x =>
+                        if (User.Favorites.Animes.Count < 25)
+                            animeList.AddField(x =>
                             {
+                                //Since the anime or manga object this time doesn't have a title, but has a name, we use the two inside the same class for simplicity's sake.
                                 x.Name = manga.Name;
                                 x.Value = manga.URL;
                                 x.IsInline = false;
                             });
-                    }
+                    });
                 }
 
                 if(User.Favorites.Characters.Count > 0)
                 {
-                    foreach(var character in User.Favorites.Characters)
+                    Parallel.ForEach(User.Favorites.Characters, character =>
                     {
                         if (User.Favorites.Characters.Count < 25)
                             characterList.AddField(x =>
@@ -111,7 +112,7 @@ namespace Burinbot.Modules
                                 x.Value = $"{character.URL}";
                                 x.IsInline = false;
                             });
-                    }
+                    });
                 }
 
                 //Builds the information about the user
@@ -131,10 +132,6 @@ namespace Burinbot.Modules
 
                 burinbotUtils.EndAndLogPerformanceTest();
 
-            }
-            catch (ArgumentException ae)
-            {
-                Console.WriteLine(ae.Message);
             }
             catch (Exception e)
             {

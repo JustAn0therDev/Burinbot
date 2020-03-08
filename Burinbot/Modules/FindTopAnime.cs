@@ -5,6 +5,7 @@ using Discord;
 using Burinbot.Entities;
 using Burinbot.Utils;
 using System;
+using System.Linq;
 
 namespace Burinbot.Modules
 {
@@ -14,8 +15,8 @@ namespace Burinbot.Modules
         [Summary("Returns a list of the top rated animes in MAL!")]
         public async Task GetTopAnimesAsync()
         {
-            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
-            TopAnimes topAnimes = new TopAnimes();
+            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
+            var topAnimes = new TopAnimes();
 
             try
             {
@@ -26,23 +27,30 @@ namespace Burinbot.Modules
                     await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
                 }
 
-                foreach (var anime in response.Data.Top)
+                Parallel.ForEach(response.Data.Top, anime => 
                 {
                     if (topAnimes.Top.Count < 25)
                         topAnimes.Top.Add(anime);
-                }
+                });
 
-                foreach (var anime in topAnimes.Top)
+                if (topAnimes.Top != null && topAnimes.Top.Count > 0)
                 {
-                    builder.AddField(x =>
+                    Parallel.ForEach(topAnimes.Top, anime =>
                     {
-                        x.Name = anime.Title ?? anime.Name;
-                        x.Value = $"Rank: {anime.Rank}";
-                        x.IsInline = false;
+                        builder.AddField(x =>
+                        {
+                            x.Name = anime.Title;
+                            x.Value = $"Rank: {anime.Rank}";
+                            x.IsInline = false;
+                        });
                     });
-                }
 
-                await ReplyAsync("", false, builder.Build());
+                    await ReplyAsync("", false, builder.Build());
+                }
+                else
+                {
+                    await ReplyAsync("No animes were found in the list of Top Animes of MAL.");
+                }
             }
             catch (Exception ex)
             {

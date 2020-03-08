@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
@@ -15,15 +15,14 @@ namespace Burinbot.Modules
         {
             var discordSocketClient = Context.Client;
             var builder = new EmbedBuilder();
-            string description = "";
+            var description = new StringBuilder();
 
             try
             {
-                foreach (SocketGuild guild in discordSocketClient.CurrentUser.MutualGuilds)
-                    description += $"{guild.Name}\n";
+                Parallel.ForEach(discordSocketClient.CurrentUser.MutualGuilds, server => description.AppendLine(server.Name));
 
                 builder.WithTitle($"Burinbot is currently in {discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
-                    .WithDescription(description)
+                    .WithDescription(description.ToString())
                     .WithColor(Color.Green);
 
                 //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message with the build method.

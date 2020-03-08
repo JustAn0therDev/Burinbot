@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System;
 using Burinbot.Utils;
 using System.Diagnostics;
+using System.Text;
 
 namespace Burinbot.Modules
 {
@@ -39,17 +40,18 @@ namespace Burinbot.Modules
 
                 var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
 
-                foreach (var module in _service.Modules)
+                Parallel.ForEach(_service.Modules, module =>
                 {
-                    string description = "";
-                    foreach (var cmd in module.Commands)
-                    {
-                        var result = await cmd.CheckPreconditionsAsync(Context);
-                        if (result.IsSuccess)
-                            description += $"!{cmd.Aliases[0]}\n{cmd.Summary}";
-                    }
+                    var description = new StringBuilder();
 
-                    if (!string.IsNullOrWhiteSpace(description))
+                    Parallel.ForEach(module.Commands, async command =>
+                    {
+                        var result = await command.CheckPreconditionsAsync(Context);
+                        if (result.IsSuccess)
+                            description.AppendLine($"!{command.Aliases[0]}\n{command.Summary}");
+                    });
+
+                    if (description != null)
                     {
                         builder.AddField(x =>
                         {
@@ -58,14 +60,12 @@ namespace Burinbot.Modules
                             x.IsInline = false;
                         });
                     }
-                }
+
+                });
+
                 await ReplyAsync("", false, builder.Build());
 
                 burinbotUtils.EndAndLogPerformanceTest();
-            }
-            catch (ArgumentException aex)
-            {
-                Console.WriteLine(aex.Message);
             }
             catch (Exception ex)
             {

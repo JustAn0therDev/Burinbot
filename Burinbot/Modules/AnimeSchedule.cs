@@ -44,12 +44,14 @@ namespace Burinbot.Modules
                 switch (dayOfTheWeek.ToLower())
                 {
                     case "monday":
-                        foreach (var anime in response.Data.Monday)
+                        Parallel.ForEach(response.Data.Monday, anime =>
                         {
                             if (Animes.Monday.Count < 25)
                                 Animes.Monday.Add(anime);
                         }
-                        foreach (var anime in Animes.Monday)
+                        );
+
+                        Parallel.ForEach(response.Data.Monday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -57,17 +59,18 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
-
+                        });
                         break;
 
                     case "tuesday":
-                        foreach (var anime in response.Data.Tuesday)
+                        Parallel.ForEach(response.Data.Tuesday, anime =>
                         {
                             if (Animes.Tuesday.Count < 25)
                                 Animes.Tuesday.Add(anime);
                         }
-                        foreach (var anime in Animes.Tuesday)
+                        );
+
+                        Parallel.ForEach(response.Data.Tuesday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -75,17 +78,18 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
-
+                        });
                         break;
 
                     case "wednesday":
-                        foreach (var anime in response.Data.Wednesday)
+                        Parallel.ForEach(response.Data.Wednesday, anime =>
                         {
                             if (Animes.Wednesday.Count < 25)
                                 Animes.Wednesday.Add(anime);
                         }
-                        foreach (var anime in Animes.Wednesday)
+                        );
+
+                        Parallel.ForEach(response.Data.Wednesday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -93,17 +97,18 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
-
+                        });
                         break;
 
                     case "thursday":
-                        foreach (var anime in response.Data.Thursday)
+                        Parallel.ForEach(response.Data.Thursday, anime =>
                         {
                             if (Animes.Thursday.Count < 25)
                                 Animes.Thursday.Add(anime);
                         }
-                        foreach (var anime in Animes.Thursday)
+                        );
+
+                        Parallel.ForEach(response.Data.Thursday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -111,17 +116,18 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
-
+                        });
                         break;
 
                     case "friday":
-                        foreach (var anime in response.Data.Friday)
+                        Parallel.ForEach(response.Data.Friday, anime =>
                         {
                             if (Animes.Friday.Count < 25)
                                 Animes.Friday.Add(anime);
                         }
-                        foreach (var anime in Animes.Friday)
+                        );
+
+                        Parallel.ForEach(response.Data.Friday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -129,17 +135,18 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
-
+                        });
                         break;
 
                     case "saturday":
-                        foreach (var anime in response.Data.Saturday)
+                        Parallel.ForEach(response.Data.Saturday, anime =>
                         {
                             if (Animes.Saturday.Count < 25)
                                 Animes.Saturday.Add(anime);
                         }
-                        foreach (var anime in Animes.Saturday)
+                        );
+
+                        Parallel.ForEach(response.Data.Saturday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -147,17 +154,19 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
+                        });
 
                         break;
 
                     case "sunday":
-                        foreach (var anime in response.Data.Sunday)
+                        Parallel.ForEach(response.Data.Sunday, anime =>
                         {
                             if (Animes.Sunday.Count < 25)
                                 Animes.Sunday.Add(anime);
                         }
-                        foreach (var anime in Animes.Sunday)
+                        );
+
+                        Parallel.ForEach(response.Data.Sunday, anime =>
                         {
                             builder.AddField(x =>
                             {
@@ -165,8 +174,7 @@ namespace Burinbot.Modules
                                 x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
                                 x.IsInline = false;
                             });
-                        }
-
+                        });
                         break;
                 }
 

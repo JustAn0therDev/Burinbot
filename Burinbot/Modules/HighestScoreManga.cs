@@ -14,8 +14,8 @@ namespace Burinbot.Modules
         [Summary("Returns a list with 25 of the highest scored animes!")]
         public async Task GetHighScoreMangasAsync()
         {
-            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
-            MangaSearch mangas = new MangaSearch();
+            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
+            var mangas = new MangaSearch();
 
             try
             {
@@ -33,13 +33,13 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                foreach (Manga item in response.Data.Results)
+                Parallel.ForEach(response.Data.Results, manga =>
                 {
                     if (mangas.Results.Count < 25)
-                        mangas.Results.Add(item);
-                }
+                        mangas.Results.Add(manga);
+                });
 
-                foreach (Manga manga in mangas.Results)
+                Parallel.ForEach(mangas.Results, manga =>
                 {
                     builder.AddField(x =>
                     {
@@ -47,13 +47,9 @@ namespace Burinbot.Modules
                         x.Value = $"Link: {manga.URL}\nScore: {manga.Score}";
                         x.IsInline = false;
                     });
-                }
+                });
 
                 await ReplyAsync("", false, builder.Build());
-            }
-            catch (ArgumentNullException anex)
-            {
-                Console.WriteLine(anex.Message);
             }
             catch (Exception ex)
             {

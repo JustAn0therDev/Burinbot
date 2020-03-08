@@ -44,10 +44,10 @@ namespace Burinbot.Utils
                     return "A NotFound status code returned to me while I was completing your request. Did you specify the parameters correctly?";
 
                 case System.Net.HttpStatusCode.InternalServerError:
-                    return "Something happened on the API end. Call my dad if you need more details or any help!";
+                    return "Something happened on the API end. Contact my creator if you need more details or any help!";
 
                 default:
-                    return "Something happened and I couldn't complete your request. Please try again!";
+                    return "Something happened and I couldn't complete your request. Please try again soon or contact my creator!";
             }
         }
 
@@ -58,15 +58,8 @@ namespace Burinbot.Utils
 
         public void EndAndLogPerformanceTest()
         {
-            try
-            {
-                _stopwatch.Stop();
-                Console.WriteLine($"Performance monitoring ended. Elapsed time until the end of command execution: {_stopwatch.ElapsedMilliseconds}ms");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            _stopwatch.Stop();
+            Console.WriteLine($"Performance monitoring ended. Elapsed time until the end of command execution: {_stopwatch.ElapsedMilliseconds}ms");
         }
 
         #endregion

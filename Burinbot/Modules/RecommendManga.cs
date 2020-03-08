@@ -16,13 +16,13 @@ namespace Burinbot.Modules
         [Summary("Returns a list of mangas based on the informed name from MyAnimeList.")]
         public async Task GetMangaRecommendationsAsync([Remainder]string mangaName)
         {
-            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
-            MangaSearch searchList = new MangaSearch();
-            MangaList RecommendationList = new MangaList();
+            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
+            var searchList = new MangaSearch();
+            var RecommendationList = new MangaList();
 
             try
             {
-                string search = mangaName.Replace(" ", "%20");
+                var search = mangaName.Replace(" ", "%20");
                 var response = new RestClient($"https://api.jikan.moe/v3/search/manga?q={search}").Execute<MangaSearch>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
@@ -37,24 +37,23 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                foreach (var manga in response.Data.Results)
-                    searchList.Results.Add(manga);
+                Parallel.ForEach(response.Data.Results, manga => searchList.Results.Add(manga));
 
                 var finalResponse = new RestClient($"https://api.jikan.moe/v3/manga/{searchList.Results[0].MalID}/recommendations").Execute<MangaList>(new RestRequest());
 
                 if (finalResponse.Data.Recommendations.Count > 0)
-                    foreach (var manga in finalResponse.Data.Recommendations)
+                    Parallel.ForEach(finalResponse.Data.Recommendations, manga =>
                     {
-                        //Limits the size of the list to 25 so Discord can render the embed list.
                         if (RecommendationList.Recommendations.Count < 25)
                             RecommendationList.Recommendations.Add(manga);
-                    }
+                    });
                 else
                 {
                     await ReplyAsync("The manga was found but there are no recommendations like it.");
+                    return;
                 }
 
-                foreach (var recommendation in RecommendationList.Recommendations)
+                Parallel.ForEach(RecommendationList.Recommendations, recommendation =>
                 {
                     builder.AddField(x =>
                     {
@@ -62,13 +61,9 @@ namespace Burinbot.Modules
                         x.Value = recommendation.URL;
                         x.IsInline = false;
                     });
-                }
+                });
 
                 await ReplyAsync("", false, builder.Build());
-            }
-            catch (ArgumentException aex)
-            {
-                Console.WriteLine(aex.Message);
             }
             catch (Exception ex)
             {

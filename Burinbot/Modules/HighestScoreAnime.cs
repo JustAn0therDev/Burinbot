@@ -19,6 +19,7 @@ namespace Burinbot.Modules
             try
             {
                 var response = new RestClient($"https://api.jikan.moe/v3/search/anime?order_by=score").Execute<AnimeSearch>(new RestRequest());
+                var animes = new AnimeSearch();
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
@@ -32,15 +33,13 @@ namespace Burinbot.Modules
                     return;
                 }
 
-                AnimeSearch animes = new AnimeSearch();
-
-                foreach (Anime item in response.Data.Results)
+                Parallel.ForEach(response.Data.Results, item =>
                 {
                     if (animes.Results.Count < 25)
                         animes.Results.Add(item);
-                }
+                });
 
-                foreach (Anime anime in animes.Results)
+                Parallel.ForEach(animes.Results, anime =>
                 {
                     builder.AddField(x =>
                     {
@@ -48,7 +47,7 @@ namespace Burinbot.Modules
                         x.Value = $"Link: {anime.URL}\nScore: {anime.Score}";
                         x.IsInline = false;
                     });
-                }
+                });
 
                 await ReplyAsync("", false, builder.Build());
             }

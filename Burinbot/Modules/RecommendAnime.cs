@@ -14,15 +14,14 @@ namespace Burinbot.Modules
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]
         public async Task GetAnimeRecommendationsAsync([Remainder]string animeName)
         {
-            EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
-            AnimeSearch searchList = new AnimeSearch();
-            AnimeList RecommendationList = new AnimeList();
+            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
+            var searchList = new AnimeSearch();
+            var RecommendationList = new AnimeList();
 
             try
             {
-
                 //This first search is made because the API does not have a route that accepts a string as an argument to get recommendations.
-                string search = animeName.Replace(" ", "%20");
+                var search = animeName.Replace(" ", "%20");
                 var response = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}").Execute<AnimeSearch>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
@@ -46,19 +45,21 @@ namespace Burinbot.Modules
                 var finalResponse = new RestClient($"https://api.jikan.moe/v3/anime/{malID}/recommendations").Execute<AnimeList>(new RestRequest());
 
                 if (finalResponse.Data.Recommendations.Count > 0)
-                    foreach (var anime in finalResponse.Data.Recommendations)
+                {
+                    Parallel.ForEach(finalResponse.Data.Recommendations, anime =>
                     {
                         //Limits the size of the list to 25 so Discord can render the embed list.
                         if (RecommendationList.Recommendations.Count < 25)
                             RecommendationList.Recommendations.Add(anime);
-                    }
+                    });
+                }
                 else
                 {
                     await ReplyAsync("The anime was found but there are no recommendations like it.");
                     return;
-                } 
+                }
 
-                foreach (var anime in RecommendationList.Recommendations)
+                Parallel.ForEach(RecommendationList.Recommendations, anime =>
                 {
                     builder.AddField(x =>
                     {
@@ -66,13 +67,9 @@ namespace Burinbot.Modules
                         x.Value = anime.URL;
                         x.IsInline = false;
                     });
-                }
+                });
 
                 await ReplyAsync("", false, builder.Build());
-            }
-            catch (ArgumentException aex)
-            {
-                Console.WriteLine(aex.Message);
             }
             catch (Exception ex)
             {
