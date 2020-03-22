@@ -11,7 +11,7 @@ namespace Burinbot.Modules
         [Command("servers")]
         [Alias("servers")]
         [Summary("Returns a list of servers in which Burinbot is currently in.")]
-        public async Task GetRegaliaServers()
+        public async Task GetBurinbotServers()
         {
             var discordSocketClient = Context.Client;
             var builder = new EmbedBuilder();
@@ -27,10 +27,6 @@ namespace Burinbot.Modules
 
                 //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message with the build method.
                 await ReplyAsync("", false, builder.Build());
-            }
-            catch (ArgumentException aex)
-            {
-                Console.WriteLine(aex.Message);
             }
             catch (Exception ex)
             {

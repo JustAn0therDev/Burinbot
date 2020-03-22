@@ -4,8 +4,8 @@ using Discord;
 using Discord.Commands;
 using RestSharp;
 using System;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
@@ -17,7 +17,7 @@ namespace Burinbot.Modules
         {
             var builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
             var burinbotUtils = new BurinbotUtils(new Stopwatch());
-            ScheduledAnime Animes = new ScheduledAnime();
+            var animes = new ScheduledAnime();
 
             try
             {
@@ -46,8 +46,8 @@ namespace Burinbot.Modules
                     case "monday":
                         Parallel.ForEach(response.Data.Monday, anime =>
                         {
-                            if (Animes.Monday.Count < 25)
-                                Animes.Monday.Add(anime);
+                            if (animes.Monday.Count < 25)
+                                animes.Monday.Add(anime);
                         }
                         );
 
@@ -65,8 +65,8 @@ namespace Burinbot.Modules
                     case "tuesday":
                         Parallel.ForEach(response.Data.Tuesday, anime =>
                         {
-                            if (Animes.Tuesday.Count < 25)
-                                Animes.Tuesday.Add(anime);
+                            if (animes.Tuesday.Count < 25)
+                                animes.Tuesday.Add(anime);
                         }
                         );
 
@@ -84,8 +84,8 @@ namespace Burinbot.Modules
                     case "wednesday":
                         Parallel.ForEach(response.Data.Wednesday, anime =>
                         {
-                            if (Animes.Wednesday.Count < 25)
-                                Animes.Wednesday.Add(anime);
+                            if (animes.Wednesday.Count < 25)
+                                animes.Wednesday.Add(anime);
                         }
                         );
 
@@ -103,8 +103,8 @@ namespace Burinbot.Modules
                     case "thursday":
                         Parallel.ForEach(response.Data.Thursday, anime =>
                         {
-                            if (Animes.Thursday.Count < 25)
-                                Animes.Thursday.Add(anime);
+                            if (animes.Thursday.Count < 25)
+                                animes.Thursday.Add(anime);
                         }
                         );
 
@@ -122,10 +122,9 @@ namespace Burinbot.Modules
                     case "friday":
                         Parallel.ForEach(response.Data.Friday, anime =>
                         {
-                            if (Animes.Friday.Count < 25)
-                                Animes.Friday.Add(anime);
-                        }
-                        );
+                            if (animes.Friday.Count < 25)
+                                animes.Friday.Add(anime);
+                        });
 
                         Parallel.ForEach(response.Data.Friday, anime =>
                         {
@@ -141,10 +140,9 @@ namespace Burinbot.Modules
                     case "saturday":
                         Parallel.ForEach(response.Data.Saturday, anime =>
                         {
-                            if (Animes.Saturday.Count < 25)
-                                Animes.Saturday.Add(anime);
-                        }
-                        );
+                            if (animes.Saturday.Count < 25)
+                                animes.Saturday.Add(anime);
+                        });
 
                         Parallel.ForEach(response.Data.Saturday, anime =>
                         {
@@ -161,10 +159,9 @@ namespace Burinbot.Modules
                     case "sunday":
                         Parallel.ForEach(response.Data.Sunday, anime =>
                         {
-                            if (Animes.Sunday.Count < 25)
-                                Animes.Sunday.Add(anime);
-                        }
-                        );
+                            if (animes.Sunday.Count < 25)
+                                animes.Sunday.Add(anime);
+                        });
 
                         Parallel.ForEach(response.Data.Sunday, anime =>
                         {
