@@ -1,46 +1,53 @@
-﻿using Burinbot.Entities;
+﻿using System;
+using System.Threading.Tasks;
+
 using Discord.Commands;
 using RestSharp;
-using System.Linq;
-using System.Threading.Tasks;
-using Burinbot.Utils;
-using System;
+
+using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
-    public class AnimeSummary : ModuleBase<SocketCommandContext>
+    public class AnimeSummary : BaseDiscordCommand
     {
+        private AnimeSearch AnimeSearch { get; set; }
+        private IRestResponse<AnimeSearch> Response { get; set; }
+
         [Command("animesummary")]
         [Summary("Gets the summary and some more information about the requested anime!")]
         public async Task GetAnimeSummaryAsync([Remainder]string animeName)
         {
             try
             {
-                string search = animeName.Replace(" ", "%20");
-                var response = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}").Execute<AnimeSearch>(new RestRequest());
+                string animeNameWithEncodedSpace = animeName.Replace(" ", "%20");
+                RestClient = new RestClient($"{Endpoint}/search/anime?q={animeNameWithEncodedSpace}");
+                ExecuteRestRequest();
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
-                    return;
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                if (response.Data == null || response.Data.Results.Count == 0)
-                {
-                    await ReplyAsync("I couldn't find any information about the informed anime. Did you type it's name correctly?");
-                    return;
-                }
-
-                Anime AnimeResult = response.Data.Results[0];
-
-                await ReplyAsync(
-                    $"{AnimeResult.Title}\nMore Info: {AnimeResult.URL}\nSynopsis: {AnimeResult.Synopsis}\nEpisodes: {AnimeResult.Episodes}\nScore: {AnimeResult.Score}"
-                    );
+                await VerifyResponseToSendMessage();
             }
-            catch (Exception ex)
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            Response = RestClient.Execute<AnimeSearch>(new RestRequest());
+            AnimeSearch = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            if (AnimeSearch == null || AnimeSearch.Results.Count == 0)
             {
-                Console.WriteLine(ex.Message);
+                await ReplyAsync("I couldn't find any information about the informed anime. Did you type it's name correctly?");
+                return;
             }
+
+            await ReplyAsync(
+                $"{AnimeSearch.Results[0].Title}\nMore Info: {AnimeSearch.Results[0].URL}\nSynopsis: {AnimeSearch.Results[0].Synopsis}\nEpisodes: {AnimeSearch.Results[0].Episodes}\nScore: {AnimeSearch.Results[0].Score}"
+                );
         }
     }
 }

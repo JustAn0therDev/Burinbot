@@ -14,7 +14,7 @@ namespace Burinbot.Modules
         [Summary("Returns a list with 25 of the highest scored animes!")]
         public async Task GetHighScoreMangasAsync()
         {
-            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
+            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
             var mangas = new MangaSearch();
 
             try
@@ -23,7 +23,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

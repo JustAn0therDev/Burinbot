@@ -16,7 +16,7 @@ namespace Burinbot.Modules
         [Summary("Returns a list of mangas based on the informed name from MyAnimeList.")]
         public async Task GetMangaRecommendationsAsync([Remainder]string mangaName)
         {
-            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
+            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
             var searchList = new MangaSearch();
             var RecommendationList = new MangaList();
 
@@ -27,7 +27,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

@@ -21,7 +21,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

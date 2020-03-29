@@ -15,8 +15,8 @@ namespace Burinbot.Modules
         [Summary("Returns the scheduled animes for the specified day! It takes a day of the week as a parameter.")]
         public async Task GetScheduledAnimesAsync([Remainder]string dayOfTheWeek)
         {
-            var builder = BurinbotUtils.GenerateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
-            var burinbotUtils = new BurinbotUtils(new Stopwatch());
+            var builder = BurinbotUtils.CreateDiscordEmbedMessage($"Scheduled animes for {dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {dayOfTheWeek}");
+            var burinbotUtils = new BurinbotUtils();
             var animes = new ScheduledAnime();
 
             try
@@ -27,8 +27,8 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
-                    burinbotUtils.EndAndLogPerformanceTest();
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    burinbotUtils.EndAndOutputPerformanceTestInConsole();
                     return;
                 }
 
@@ -176,7 +176,7 @@ namespace Burinbot.Modules
                 }
 
                 await ReplyAsync("", false, builder.Build());
-                burinbotUtils.EndAndLogPerformanceTest();
+                burinbotUtils.EndAndOutputPerformanceTestInConsole();
             }
             catch (ArgumentNullException anex)
             {

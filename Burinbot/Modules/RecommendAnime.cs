@@ -14,7 +14,7 @@ namespace Burinbot.Modules
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]
         public async Task GetAnimeRecommendationsAsync([Remainder]string animeName)
         {
-            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
+            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
             var searchList = new AnimeSearch();
             var RecommendationList = new AnimeList();
 
@@ -26,7 +26,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

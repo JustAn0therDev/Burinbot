@@ -32,13 +32,13 @@ namespace Burinbot.Modules
         [Summary("Returns a list containing all of Burinbot's commands.")]
         public async Task GetHelpAsync()
         {
-            BurinbotUtils burinbotUtils = new BurinbotUtils(new Stopwatch());
+            BurinbotUtils burinbotUtils = new BurinbotUtils();
 
             try
             {
                 burinbotUtils.StartPerformanceTest();
 
-                var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
+                var builder = BurinbotUtils.CreateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
 
                 Parallel.ForEach(_service.Modules, module =>
                 {
@@ -65,7 +65,7 @@ namespace Burinbot.Modules
 
                 await ReplyAsync("", false, builder.Build());
 
-                burinbotUtils.EndAndLogPerformanceTest();
+                burinbotUtils.EndAndOutputPerformanceTestInConsole();
             }
             catch (Exception ex)
             {

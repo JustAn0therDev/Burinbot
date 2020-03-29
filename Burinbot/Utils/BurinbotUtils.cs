@@ -1,6 +1,7 @@
 ﻿using System;
-using Discord;
+using System.Net;
 using System.Diagnostics;
+using Discord;
 
 namespace Burinbot.Utils
 {
@@ -8,22 +9,19 @@ namespace Burinbot.Utils
     {
         #region Private Props
 
-        private readonly Stopwatch _stopwatch;
+        private static readonly Stopwatch _stopwatch = new Stopwatch();
 
         #endregion
 
         #region Constructors
 
-        public BurinbotUtils(Stopwatch stopwatch)
-        {
-            _stopwatch = stopwatch;
-        }
+        public BurinbotUtils() { }
 
         #endregion
 
         #region Public Methods
 
-        public static EmbedBuilder GenerateDiscordEmbedMessage(string title, Color color, string description)
+        public static EmbedBuilder CreateDiscordEmbedMessage(string title, Color color, string description)
         {
             return new EmbedBuilder()
             {
@@ -33,17 +31,17 @@ namespace Burinbot.Utils
             };
         }
 
-        public static string CheckForHttpStatusCodes(System.Net.HttpStatusCode statusCode)
+        public static string CreateErrorMessageBasedOnHttpStatusCode(HttpStatusCode statusCode)
         {
             switch (statusCode)
             {
-                case System.Net.HttpStatusCode.BadRequest:
+                case HttpStatusCode.BadRequest:
                     return "A BadRequest error returned while I tried to complete your request. Did you specify the parameters correctly?";
 
-                case System.Net.HttpStatusCode.NotFound:
+                case HttpStatusCode.NotFound:
                     return "A NotFound status code returned to me while I was completing your request. Did you specify the parameters correctly?";
 
-                case System.Net.HttpStatusCode.InternalServerError:
+                case HttpStatusCode.InternalServerError:
                     return "Something happened on the API end. Contact my creator if you need more details or any help!";
 
                 default:
@@ -53,10 +51,11 @@ namespace Burinbot.Utils
 
         public void StartPerformanceTest()
         {
+            _stopwatch.Reset();
             _stopwatch.Start();
         }
 
-        public void EndAndLogPerformanceTest()
+        public void EndAndOutputPerformanceTestInConsole()
         {
             _stopwatch.Stop();
             Console.WriteLine($"Performance monitoring ended. Elapsed time until the end of command execution: {_stopwatch.ElapsedMilliseconds}ms");

@@ -16,13 +16,13 @@ namespace Burinbot.Modules
         {
             try
             {
-                EmbedBuilder builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top mangas!", Color.Green, "Here are the top mangas I found!");
+                EmbedBuilder builder = BurinbotUtils.CreateDiscordEmbedMessage("Top mangas!", Color.Green, "Here are the top mangas I found!");
                 var topMangas = new TopMangas();
                 var response = new RestClient("https://api.jikan.moe/v3/top/manga").Execute<TopMangas>(new RestRequest());
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

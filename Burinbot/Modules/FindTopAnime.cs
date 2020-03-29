@@ -15,7 +15,7 @@ namespace Burinbot.Modules
         [Summary("Returns a list of the top rated animes in MAL!")]
         public async Task GetTopAnimesAsync()
         {
-            var builder = BurinbotUtils.GenerateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
+            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
             var topAnimes = new TopAnimes();
 
             try
@@ -24,7 +24,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CheckForHttpStatusCodes(response.StatusCode));
+                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                 }
 
                 foreach (var anime in response.Data.Top)
