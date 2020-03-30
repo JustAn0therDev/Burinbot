@@ -5,16 +5,17 @@ using RestSharp;
 using System;
 using System.Threading.Tasks;
 using Burinbot.Utils;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class HighestScoreAnime : ModuleBase<SocketCommandContext>
+    public class HighestScoreAnime : BaseDiscordCommand
     {
         [Command("highestscoreanimes")]
         [Summary("Returns a list with 25 of the highest scored animes!")]
         public async Task GetHighScoreAnimesAsync()
         {
-            EmbedBuilder builder = BurinbotUtils.CreateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
+            EmbedBuilder builder = CreateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
 
             try
             {
@@ -23,7 +24,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 
@@ -50,10 +51,6 @@ namespace Burinbot.Modules
                 });
 
                 await ReplyAsync("", false, builder.Build());
-            }
-            catch (ArgumentNullException anex)
-            {
-                Console.WriteLine(anex.Message);
             }
             catch (Exception ex)
             {

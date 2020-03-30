@@ -1,11 +1,12 @@
-﻿using Discord.Commands;
+﻿using Burinbot.Base;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class Ban : ModuleBase<SocketCommandContext>
+    public class Ban : BaseDiscordCommand
     {
         [Command("ban")]
         [Alias("banmember")]

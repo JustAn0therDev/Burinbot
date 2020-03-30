@@ -11,6 +11,8 @@ namespace Burinbot.Modules
 {
     public class AnimeUserScore : BaseDiscordCommand
     {
+        private string AnimeName { get; set; }
+        private string User { get; set; }
         private UserAnimeList UserAnimeList { get; set; }
         private IRestResponse<UserAnimeList> Response { get; set; }
 
@@ -21,8 +23,6 @@ namespace Burinbot.Modules
         {
             try
             {
-                RestClient = new RestClient($"{Endpoint}/user/{user}/animelist?search={animeName.Replace(" ", "%20")}");
-
                 ExecuteRestRequest();
                 PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
@@ -33,6 +33,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
+            RestClient = new RestClient($"{Endpoint}/user/{User}/animelist?search={AnimeName.Replace(" ", "%20")}");
             Response = RestClient.Execute<UserAnimeList>(Request);
             UserAnimeList = Response.Data;
         }

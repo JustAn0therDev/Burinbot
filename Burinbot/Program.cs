@@ -6,6 +6,9 @@ using Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.IO;
+using Burinbot.Modules;
+using RestSharp;
+using Burinbot.Entities;
 
 namespace Burinbot
 {

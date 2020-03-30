@@ -1,11 +1,12 @@
-﻿using Discord.Commands;
+﻿using Burinbot.Base;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class ChangeNickname : ModuleBase<SocketCommandContext>
+    public class ChangeNickname : BaseDiscordCommand
     {
         [Command("changenick")]
         [Summary("Changes the nickname of the mentioned user. It requires permission to change the nickname. It takes a user and the desired nickname as parameters.")]

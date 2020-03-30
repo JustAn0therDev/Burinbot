@@ -1,10 +1,11 @@
-﻿using Discord.Commands;
+﻿using Burinbot.Base;
+using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class FindLove : ModuleBase<SocketCommandContext>
+    public class FindLove : BaseDiscordCommand
     {
         [Command("findlove")]
         [Summary("Ah, I see you're a man of culture as well.")]

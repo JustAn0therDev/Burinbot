@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using Burinbot.Base;
+using Discord;
 using Discord.Commands;
 using System;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class BurinbotServers : ModuleBase<SocketCommandContext>
+    public class BurinbotServers : BaseDiscordCommand
     {
         [Command("servers")]
         [Alias("servers")]

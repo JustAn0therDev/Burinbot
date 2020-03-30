@@ -6,10 +6,11 @@ using Burinbot.Entities;
 using Burinbot.Utils;
 using System;
 using System.Linq;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class FindTopAnime : ModuleBase<SocketCommandContext>
+    public class FindTopAnime : BaseDiscordCommand
     {
         [Command("topanimes")]
         [Summary("Returns a list of the top rated animes in MAL!")]
@@ -24,7 +25,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                 }
 
                 foreach (var anime in response.Data.Top)

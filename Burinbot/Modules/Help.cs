@@ -5,10 +5,11 @@ using System;
 using Burinbot.Utils;
 using System.Diagnostics;
 using System.Text;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class Help : ModuleBase<SocketCommandContext>
+    public class Help : BaseDiscordCommand
     {
         #region Private Props
 
@@ -32,13 +33,9 @@ namespace Burinbot.Modules
         [Summary("Returns a list containing all of Burinbot's commands.")]
         public async Task GetHelpAsync()
         {
-            BurinbotUtils burinbotUtils = new BurinbotUtils();
-
             try
             {
-                burinbotUtils.StartPerformanceTest();
-
-                var builder = BurinbotUtils.CreateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
+                var builder = CreateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
 
                 Parallel.ForEach(_service.Modules, module =>
                 {
@@ -64,8 +61,6 @@ namespace Burinbot.Modules
                 });
 
                 await ReplyAsync("", false, builder.Build());
-
-                burinbotUtils.EndAndOutputPerformanceTestInConsole();
             }
             catch (Exception ex)
             {

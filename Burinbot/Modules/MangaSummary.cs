@@ -5,10 +5,11 @@ using RestSharp;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class MangaSummary : ModuleBase<SocketCommandContext>
+    public class MangaSummary : BaseDiscordCommand
     {
         [Command("mangasummary")]
         [Summary("Gets the summary and some more information about the requested manga!")]
@@ -21,7 +22,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 
@@ -36,10 +37,6 @@ namespace Burinbot.Modules
                 await ReplyAsync(
                     $"{MangaResult.Title}\nMore Info: {MangaResult.URL}\nSynopsis: {MangaResult.Synopsis}\nChapters: {MangaResult.Chapters}\nScore: {MangaResult.Score}"
                     );
-            }
-            catch (ArgumentNullException aex)
-            {
-                Console.WriteLine(aex.Message);
             }
             catch (Exception ex)
             {

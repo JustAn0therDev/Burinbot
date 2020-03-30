@@ -1,10 +1,11 @@
-﻿using Discord.Commands;
+﻿using Burinbot.Base;
+using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class Ping : ModuleBase<SocketCommandContext>
+    public class Ping : BaseDiscordCommand
     {
         [Command("oinc")]
         [Alias("ping")]

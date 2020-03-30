@@ -5,10 +5,11 @@ using Discord;
 using Burinbot.Entities;
 using Burinbot.Utils;
 using System;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class FindTopManga : ModuleBase<SocketCommandContext>
+    public class FindTopManga : BaseDiscordCommand
     {
         [Command("topmangas")]
         [Summary("Returns a list of the top rated mangas in MAL!")]
@@ -22,7 +23,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

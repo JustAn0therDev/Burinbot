@@ -1,11 +1,12 @@
-﻿using Discord.Commands;
+﻿using Burinbot.Base;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class Kick : ModuleBase<SocketCommandContext>
+    public class Kick : BaseDiscordCommand
     {
         [Command("kick")]
         [Summary("Kicks a member of the server. Burinbot must have permission to kick somebody and you should as well.")]

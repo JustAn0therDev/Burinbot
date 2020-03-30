@@ -5,10 +5,11 @@ using Discord;
 using Burinbot.Entities;
 using Burinbot.Utils;
 using System;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class RecommendAnime : ModuleBase<SocketCommandContext>
+    public class RecommendAnime : BaseDiscordCommand
     {
         [Command("recommendanime")]
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]
@@ -26,7 +27,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

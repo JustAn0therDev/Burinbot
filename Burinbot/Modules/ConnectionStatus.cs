@@ -1,10 +1,11 @@
-﻿using Discord.Commands;
+﻿using Burinbot.Base;
+using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class ConnectionStatus : ModuleBase<SocketCommandContext>
+    public class ConnectionStatus : BaseDiscordCommand
     {
         [Command("mystatus")]
         [Alias("mystatus")]

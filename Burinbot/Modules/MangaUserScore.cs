@@ -5,10 +5,11 @@ using Burinbot.Entities;
 using System.Linq;
 using System;
 using Burinbot.Utils;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class MangaUserScore : ModuleBase<SocketCommandContext>
+    public class MangaUserScore : BaseDiscordCommand
     {
         [Command("mangauserscore")]
         [Alias("Manga User Score")]
@@ -22,7 +23,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 
@@ -38,10 +39,6 @@ namespace Burinbot.Modules
                     await ReplyAsync($"{Context.User.Mention}, the user scored this manga with {manga.Score}");
                 else
                     await ReplyAsync($"I didn't find a manga with that name for the specified user. Maybe he/she hasn't gave it a score yet!");
-            }
-            catch (ArgumentNullException aex)
-            {
-                Console.WriteLine(aex.Message);
             }
             catch (Exception ex)
             {

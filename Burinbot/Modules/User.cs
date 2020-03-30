@@ -5,19 +5,17 @@ using System.Threading.Tasks;
 using Burinbot.Entities;
 using Discord;
 using Burinbot.Utils;
-using System.Diagnostics;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class User : ModuleBase<SocketCommandContext>
+    public class User : BaseDiscordCommand
     {
         [Command("user")]
         [Alias("user")]
         [Summary("Returns some info about the requested user. The parameter is a MAL username!")]
         public async Task GetUserAsync([Remainder]string user)
         {
-            var burinbotUtils = new BurinbotUtils();
-
             var builder = BurinbotUtils.CreateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
             var animeList = BurinbotUtils.CreateDiscordEmbedMessage("", Color.Green, "List of favorite animes!");
             var mangaList = BurinbotUtils.CreateDiscordEmbedMessage("", Color.Green, "List of favorite mangas!");
@@ -25,14 +23,12 @@ namespace Burinbot.Modules
 
             try
             {
-                burinbotUtils.StartPerformanceTest();
                 var MALUser = user.Replace(" ", "%20");
                 var response = new RestClient($"https://api.jikan.moe/v3/user/{MALUser}").Execute<MALUser>(new RestRequest());
 
                 if (!response.StatusCode.Equals((System.Net.HttpStatusCode.OK)))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    burinbotUtils.EndAndOutputPerformanceTestInConsole();
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 
@@ -115,23 +111,16 @@ namespace Burinbot.Modules
                     });
                 }
 
-                //Builds the information about the user
                 await ReplyAsync("", false, builder.Build());
 
-                //Builds the favorite animes list
                 if (User.Favorites.Animes.Count > 0)
                     await ReplyAsync("", false, animeList.Build());
 
-                //Builds the favorite manga list
                 if (User.Favorites.Mangas.Count > 0)
                     await ReplyAsync("", false, mangaList.Build());
 
-                //Builds the favorite characters list
                 if (User.Favorites.Characters.Count > 0)
                     await ReplyAsync("", false, characterList.Build());
-
-                burinbotUtils.EndAndOutputPerformanceTestInConsole();
-
             }
             catch (Exception e)
             {

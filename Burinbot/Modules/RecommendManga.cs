@@ -6,10 +6,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Burinbot.Utils;
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class RecommendManga : ModuleBase<SocketCommandContext>
+    public class RecommendManga : BaseDiscordCommand
     {
         [Command("recommendmanga")]
         [Alias("manga")]
@@ -27,7 +28,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

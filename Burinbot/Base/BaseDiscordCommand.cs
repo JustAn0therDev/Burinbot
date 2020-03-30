@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Burinbot.Utils;
 using Discord;
@@ -9,18 +10,46 @@ namespace Burinbot.Base
 {
     public abstract class BaseDiscordCommand : ModuleBase<SocketCommandContext>
     {
-        protected string Endpoint { get; } = "https://api.jikan.moe/v3";
-        protected EmbedBuilder EmbedMessage { get; set; }
+        protected static string Endpoint { get; } = "https://api.jikan.moe/v3";
+        protected virtual EmbedBuilder EmbedMessage { get; set; }
         protected RestClient RestClient { get; set; }
         protected RestRequest Request { get; set; } = new RestRequest(Method.GET);
         protected string ErrorMessage { get; set; } = string.Empty;
 
         public void PopulateErrorMessageBasedOnHttpStatusCode(IRestResponse response)
         {
-            if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
+            if (!response.StatusCode.Equals(HttpStatusCode.OK))
             {
-                ErrorMessage = BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode);
+                ErrorMessage = CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode);
             }
+        }
+
+        public string CreateErrorMessageBasedOnHttpStatusCode(HttpStatusCode statusCode)
+        {
+            switch (statusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    return "A BadRequest error returned while I tried to complete your request. Did you specify the parameters correctly?";
+
+                case HttpStatusCode.NotFound:
+                    return "A NotFound status code returned to me while I was completing your request. Did you specify the parameters correctly?";
+
+                case HttpStatusCode.InternalServerError:
+                    return "Something happened on the API end. Contact my creator if you need more details or any help!";
+
+                default:
+                    return "Something happened and I couldn't complete your request. Please try again soon or contact my creator!";
+            }
+        }
+
+        public EmbedBuilder CreateDiscordEmbedMessage(string title, Color color, string description)
+        {
+            return new EmbedBuilder()
+            {
+                Title = title,
+                Color = color,
+                Description = description
+            };
         }
 
         protected virtual void ExecuteRestRequest() { }

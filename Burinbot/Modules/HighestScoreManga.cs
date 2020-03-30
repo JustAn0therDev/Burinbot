@@ -1,4 +1,5 @@
-﻿using Burinbot.Entities;
+﻿using Burinbot.Base;
+using Burinbot.Entities;
 using Burinbot.Utils;
 using Discord;
 using Discord.Commands;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class HighestScoreManga : ModuleBase<SocketCommandContext>
+    public class HighestScoreManga : BaseDiscordCommand
     {
         [Command("highestscoremangas")]
         [Summary("Returns a list with 25 of the highest scored animes!")]
@@ -23,7 +24,7 @@ namespace Burinbot.Modules
 
                 if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                 {
-                    await ReplyAsync(BurinbotUtils.CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
+                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
                     return;
                 }
 

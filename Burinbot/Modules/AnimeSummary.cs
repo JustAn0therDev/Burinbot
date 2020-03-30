@@ -11,6 +11,7 @@ namespace Burinbot.Modules
 {
     public class AnimeSummary : BaseDiscordCommand
     {
+        private string AnimeNameWithEncodedSpace { get; set; }
         private AnimeSearch AnimeSearch { get; set; }
         private IRestResponse<AnimeSearch> Response { get; set; }
 
@@ -20,8 +21,7 @@ namespace Burinbot.Modules
         {
             try
             {
-                string animeNameWithEncodedSpace = animeName.Replace(" ", "%20");
-                RestClient = new RestClient($"{Endpoint}/search/anime?q={animeNameWithEncodedSpace}");
+                AnimeNameWithEncodedSpace = animeName.Replace(" ", "%20");
                 ExecuteRestRequest();
 
                 PopulateErrorMessageBasedOnHttpStatusCode(Response);
@@ -33,6 +33,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
+            RestClient = new RestClient($"{Endpoint}/search/anime?q={AnimeNameWithEncodedSpace}");
             Response = RestClient.Execute<AnimeSearch>(new RestRequest());
             AnimeSearch = Response.Data;
         }
