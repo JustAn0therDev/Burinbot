@@ -20,10 +20,6 @@ namespace Burinbot.Modules
                 await Context.Guild.AddBanAsync(user);
                 await ReplyAsync($"{Context.User.Mention}, the requested user has been banned from this server.");
             }
-            catch (ArgumentNullException anex)
-            {
-                Console.WriteLine(anex.Message);
-            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);

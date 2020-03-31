@@ -4,7 +4,7 @@ namespace Burinbot.Modules.SubClassesForModules
 {
     public class AnimeScheduleEmbedMessageBuilder : AnimeSchedule
     {
-        public async Task BuildEmbedMessageWithAnimeScheduledForMonday()
+        public static async Task BuildEmbedMessageWithAnimeScheduledForMonday()
         {
             Parallel.ForEach(Animes.Monday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
              {

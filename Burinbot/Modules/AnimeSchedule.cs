@@ -45,7 +45,7 @@ namespace Burinbot.Modules
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}", false, null);
             }
         }
 
@@ -73,15 +73,68 @@ namespace Burinbot.Modules
 
         private async Task<bool> CheckIfPropertiesInsideTheAnimesListAreNull()
         {
-            foreach (var list in Animes.GetType().GetProperties())
+            bool listOfAnimesForTheDayIsNull = false;
+            switch (DayOfTheWeek.ToLower())
             {
-                if (list == null && list.Name.ToLower() == DayOfTheWeek.ToLower())
-                {
-                    await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
-                    return true;
-                }
+                case "monday":
+                    if (Animes == null || Animes.Monday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+
+                case "tuesday":
+                    if (Animes == null || Animes.Tuesday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+
+                case "wednesday":
+                    if (Animes == null || Animes.Wednesday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+
+                case "thursday":
+                    if (Animes == null || Animes.Thursday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+
+                case "friday":
+                    if (Animes == null || Animes.Friday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+
+                case "saturday":
+                    if (Animes == null || Animes.Saturday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+
+                case "sunday":
+                    if (Animes == null || Animes.Sunday.Count == 0)
+                    {
+                        await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                        listOfAnimesForTheDayIsNull = true;
+                    }
+                    break;
+                default:
+                    throw new NullReferenceException("There no day of the week with this name, dumbass.");
             }
-            return false;
+            return listOfAnimesForTheDayIsNull;
         }
 
         private async Task BuildEmbedMessageWithResponseData()

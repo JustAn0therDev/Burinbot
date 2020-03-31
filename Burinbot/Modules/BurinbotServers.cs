@@ -9,29 +9,31 @@ namespace Burinbot.Modules
 {
     public class BurinbotServers : BaseDiscordCommand
     {
+        #region Private Members
+
+        private StringBuilder Description { get; set; }
+
+        #endregion
+
         [Command("servers")]
         [Alias("servers")]
         [Summary("Returns a list of servers in which Burinbot is currently in.")]
         public async Task GetBurinbotServers()
         {
-            var discordSocketClient = Context.Client;
-            var builder = new EmbedBuilder();
-            var description = new StringBuilder();
-
             try
             {
-                Parallel.ForEach(discordSocketClient.CurrentUser.MutualGuilds, server => description.AppendLine(server.Name));
+                var discordSocketClient = Context.Client;
+                Parallel.ForEach(discordSocketClient.CurrentUser.MutualGuilds, server => Description.AppendLine(server.Name));
 
-                builder.WithTitle($"Burinbot is currently in {discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
-                    .WithDescription(description.ToString())
+                EmbedMessage.WithTitle($"Burinbot is currently in {discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
+                    .WithDescription(Description.ToString())
                     .WithColor(Color.Green);
 
-                //Arguments being passed to ReplyAsync correspond to message, IsTTS (text to speech) and an Embed Message with the build method.
-                await ReplyAsync("", false, builder.Build());
+                await ReplyAsync("", false, EmbedMessage.Build());
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await ReplyAsync(ex.Message, false, null);
             }
         }
     }
