@@ -1,7 +1,6 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
-using Burinbot.Utils;
+
 using Discord;
 using Discord.Commands;
 using RestSharp;
@@ -42,6 +41,9 @@ namespace Burinbot.Base
             }
         }
 
+        protected virtual void ExecuteRestRequest() { }
+        protected virtual async Task VerifyResponseToSendMessage() => await Task.CompletedTask;
+
         public EmbedBuilder CreateDiscordEmbedMessage(string title, Color color, string description)
         {
             return new EmbedBuilder()
@@ -51,8 +53,5 @@ namespace Burinbot.Base
                 Description = description
             };
         }
-
-        protected virtual void ExecuteRestRequest() { }
-        protected virtual async Task VerifyResponseToSendMessage() => await Task.CompletedTask;
     }
 }

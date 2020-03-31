@@ -18,7 +18,7 @@ namespace Burinbot.Modules
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}");
             }
         }
     }

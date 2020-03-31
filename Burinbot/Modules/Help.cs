@@ -37,18 +37,18 @@ namespace Burinbot.Modules
             {
                 var builder = CreateDiscordEmbedMessage("Currently Available Commands!", Color.Green, "These are the available commands:");
 
-                Parallel.ForEach(_service.Modules, module =>
+                Parallel.ForEach(_service.Modules, async module =>
                 {
                     var description = new StringBuilder();
 
-                    Parallel.ForEach(module.Commands, async command =>
+                    foreach (var command in module.Commands)
                     {
                         var result = await command.CheckPreconditionsAsync(Context);
                         if (result.IsSuccess)
                             description.AppendLine($"!{command.Aliases[0]}\n{command.Summary}");
-                    });
+                    }
 
-                    if (description != null)
+                    if (!string.IsNullOrWhiteSpace(description.ToString()))
                     {
                         builder.AddField(x =>
                         {

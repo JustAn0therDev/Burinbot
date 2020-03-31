@@ -23,12 +23,22 @@ namespace Burinbot.Modules
         {
             try
             {
+                await PopulateQueryParameters(user, animeName);
+
                 ExecuteRestRequest();
                 PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
                 await VerifyResponseToSendMessage();
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}"); }
+        }
+
+        private Task PopulateQueryParameters(string user, string animeName)
+        {
+            User = user;
+            AnimeName = animeName.Replace(" ", "%20");
+
+            return Task.CompletedTask;
         }
 
         protected override void ExecuteRestRequest()

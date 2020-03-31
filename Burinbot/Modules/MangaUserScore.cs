@@ -1,16 +1,21 @@
-﻿using Discord.Commands;
-using RestSharp;
+﻿using System;
 using System.Threading.Tasks;
-using Burinbot.Entities;
-using System.Linq;
-using System;
-using Burinbot.Utils;
+
+using Discord.Commands;
+using RestSharp;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class MangaUserScore : BaseDiscordCommand
     {
+        private string User { get; set; }
+        private string MangaName { get; set; }
+        private UserMangaList UserMangaList { get; set; }
+        private IRestResponse<UserMangaList> Response { get; set; }
+
         [Command("mangauserscore")]
         [Alias("Manga User Score")]
         [Summary("Returns the score given to a manga by an specific user. It takes the username and manga name as parameters")]
@@ -18,32 +23,53 @@ namespace Burinbot.Modules
         {
             try
             {
-                mangaName = mangaName.Replace(" ", "%20");
-                var response = new RestClient($"https://api.jikan.moe/v3/user/{user}/mangalist?search={mangaName}").Execute<UserMangaList>(new RestRequest());
+                await PopulateQueryParameters(user, mangaName);
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                ExecuteRestRequest();
 
-                if (response.Data.UserMangas.Count == 0)
-                {
-                    await ReplyAsync("I didn't find any mangas based on the user and anime name you informed me. Did you type its name correctly?");
-                    return;
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                var manga = response.Data.UserMangas[0];
-
-                if (manga != null)
-                    await ReplyAsync($"{Context.User.Mention}, the user scored this manga with {manga.Score}");
-                else
-                    await ReplyAsync($"I didn't find a manga with that name for the specified user. Maybe he/she hasn't gave it a score yet!");
+                await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}");
             }
+        }
+
+        private Task PopulateQueryParameters(string user, string mangaName)
+        {
+            User = user;
+            MangaName = mangaName.Replace(" ", "%20");
+
+            return Task.CompletedTask;
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/user/{User}/mangalist?search={MangaName}");
+            Response = RestClient.Execute<UserMangaList>(Request);
+            UserMangaList = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                await ReplyAsync(ErrorMessage);
+                return;
+            }
+
+            if (UserMangaList == null || UserMangaList.UserMangas.Count == 0)
+            {
+                await ReplyAsync("I didn't find any mangas based on the user and anime name you informed me. Did you type its name correctly?");
+                return;
+            }
+
+            if (UserMangaList.UserMangas[0] == null)
+                await ReplyAsync($"I didn't find a manga with that name for the specified user. Maybe he/she hasn't gave it a score yet!");
+            else
+                await ReplyAsync($"{Context.User.Mention}, {User} scored this manga with {UserMangaList.UserMangas[0].Score}");
         }
     }
 }

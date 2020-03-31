@@ -4,9 +4,9 @@ namespace Burinbot.Modules.SubClassesForModules
 {
     public class AnimeScheduleEmbedMessageBuilder : AnimeSchedule
     {
-        public static async Task BuildEmbedMessageWithAnimeScheduledForMonday()
+        public Task BuildEmbedMessageWithAnimeScheduledForMonday()
         {
-            Parallel.ForEach(Animes.Monday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Monday, anime =>
              {
                  if (Animes.Monday.Count < 25)
                      Animes.Monday.Add(anime);
@@ -21,11 +21,13 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
 
-        public async Task BuildEmbedMessageWithAnimeScheduledForTuesday()
+        public Task BuildEmbedMessageWithAnimeScheduledForTuesday()
         {
-            Parallel.ForEach(Animes.Tuesday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Tuesday, anime =>
             {
                 if (Animes.Tuesday.Count < 25)
                     Animes.Tuesday.Add(anime);
@@ -40,11 +42,13 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
 
-        public async Task BuildEmbedMessageWithAnimeScheduledForWednesday()
+        public Task BuildEmbedMessageWithAnimeScheduledForWednesday()
         {
-            Parallel.ForEach(Animes.Wednesday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Wednesday, anime =>
             {
                 if (Animes.Wednesday.Count < 25)
                     Animes.Wednesday.Add(anime);
@@ -59,11 +63,13 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
 
-        public async Task BuildEmbedMessageWithAnimeScheduledForThursday()
+        public Task BuildEmbedMessageWithAnimeScheduledForThursday()
         {
-            Parallel.ForEach(Animes.Thursday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Thursday, anime =>
             {
                 if (Animes.Thursday.Count < 25)
                     Animes.Thursday.Add(anime);
@@ -78,11 +84,13 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
 
-        public async Task BuildEmbedMessageWithAnimeScheduledForFriday()
+        public Task BuildEmbedMessageWithAnimeScheduledForFriday()
         {
-            Parallel.ForEach(Animes.Friday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Friday, anime =>
             {
                 if (Animes.Friday.Count < 25)
                     Animes.Friday.Add(anime);
@@ -97,11 +105,13 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
 
-        public async Task BuildEmbedMessageWithAnimeScheduledForSaturday()
+        public Task BuildEmbedMessageWithAnimeScheduledForSaturday()
         {
-            Parallel.ForEach(Animes.Saturday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Saturday, anime =>
             {
                 if (Animes.Saturday.Count < 25)
                     Animes.Saturday.Add(anime);
@@ -116,11 +126,13 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
 
-        public async Task BuildEmbedMessageWithAnimeScheduledForSunday()
+        public Task BuildEmbedMessageWithAnimeScheduledForSunday()
         {
-            Parallel.ForEach(Animes.Sunday, new ParallelOptions { MaxDegreeOfParallelism = 1 }, anime =>
+            Parallel.ForEach(Animes.Sunday, anime =>
             {
                 if (Animes.Sunday.Count < 25)
                     Animes.Sunday.Add(anime);
@@ -135,6 +147,8 @@ namespace Burinbot.Modules.SubClassesForModules
                     x.IsInline = false;
                 });
             });
+
+            return Task.CompletedTask;
         }
     }
 }

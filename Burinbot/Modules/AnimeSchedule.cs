@@ -1,11 +1,13 @@
-﻿using Burinbot.Base;
-using Burinbot.Entities;
-using Burinbot.Modules.SubClassesForModules;
+﻿using System;
+using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 using RestSharp;
-using System;
-using System.Threading.Tasks;
+
+using Burinbot.Base;
+using Burinbot.Entities;
+using Burinbot.Modules.SubClassesForModules;
 
 namespace Burinbot.Modules
 {
@@ -45,7 +47,7 @@ namespace Burinbot.Modules
             }
             catch (Exception ex)
             {
-                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}", false, null);
+                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}");
             }
         }
 
@@ -77,7 +79,7 @@ namespace Burinbot.Modules
             switch (DayOfTheWeek.ToLower())
             {
                 case "monday":
-                    if (Animes == null || Animes.Monday.Count == 0)
+                    if (Animes.Monday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
@@ -85,7 +87,7 @@ namespace Burinbot.Modules
                     break;
 
                 case "tuesday":
-                    if (Animes == null || Animes.Tuesday.Count == 0)
+                    if (Animes.Tuesday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
@@ -93,7 +95,7 @@ namespace Burinbot.Modules
                     break;
 
                 case "wednesday":
-                    if (Animes == null || Animes.Wednesday.Count == 0)
+                    if (Animes.Wednesday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
@@ -101,7 +103,7 @@ namespace Burinbot.Modules
                     break;
 
                 case "thursday":
-                    if (Animes == null || Animes.Thursday.Count == 0)
+                    if (Animes.Thursday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
@@ -109,7 +111,7 @@ namespace Burinbot.Modules
                     break;
 
                 case "friday":
-                    if (Animes == null || Animes.Friday.Count == 0)
+                    if (Animes.Friday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
@@ -117,7 +119,7 @@ namespace Burinbot.Modules
                     break;
 
                 case "saturday":
-                    if (Animes == null || Animes.Saturday.Count == 0)
+                    if (Animes.Saturday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
@@ -125,7 +127,7 @@ namespace Burinbot.Modules
                     break;
 
                 case "sunday":
-                    if (Animes == null || Animes.Sunday.Count == 0)
+                    if (Animes.Sunday.Count == 0)
                     {
                         await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                         listOfAnimesForTheDayIsNull = true;
