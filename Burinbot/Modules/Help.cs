@@ -2,9 +2,6 @@
 using Discord.Commands;
 using System.Threading.Tasks;
 using System;
-using Burinbot.Utils;
-using System.Diagnostics;
-using System.Text;
 using Burinbot.Base;
 
 namespace Burinbot.Modules
@@ -14,8 +11,6 @@ namespace Burinbot.Modules
         #region Private Props
 
         private readonly CommandService _service;
-
-        private StringBuilder Description { get; set; } = new StringBuilder();
 
         #endregion
 
@@ -44,20 +39,15 @@ namespace Burinbot.Modules
                     foreach (var command in module.Commands)
                     {
                         var result = await command.CheckPreconditionsAsync(Context);
+
                         if (result.IsSuccess)
-                            Description.AppendLine($"!{command.Aliases[0]}\n{command.Summary}");
+                            EmbedMessage.AddField(x =>
+                            {
+                                x.Name = $"{module.Name} | !{command.Aliases[0]}";
+                                x.Value = $"{command.Summary}";
+                                x.IsInline = false;
+                            });
                     }
-
-                    if (!string.IsNullOrWhiteSpace(Description.ToString()))
-                    {
-                        EmbedMessage.AddField(x =>
-                        {
-                            x.Name = module.Name;
-                            x.Value = Description;
-                            x.IsInline = false;
-                        });
-                    }
-
                 });
 
                 await ReplyAsync("", false, EmbedMessage.Build());

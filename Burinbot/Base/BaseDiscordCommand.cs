@@ -10,7 +10,9 @@ namespace Burinbot.Base
 {
     public abstract class BaseDiscordCommand : ModuleBase<SocketCommandContext>
     {
+        protected const int LimitOfFieldsPerEmbedMessage = 25;
         protected const string ExceptionMessage = "Something bad happened in the code! Error: ";
+
         protected static string Endpoint { get; } = "https://api.jikan.moe/v3";
         protected virtual EmbedBuilder EmbedMessage { get; set; }
         protected RestClient RestClient { get; set; }
@@ -25,7 +27,7 @@ namespace Burinbot.Base
             }
         }
 
-        public string CreateErrorMessageBasedOnHttpStatusCode(HttpStatusCode statusCode)
+        protected string CreateErrorMessageBasedOnHttpStatusCode(HttpStatusCode statusCode)
         {
             switch (statusCode)
             {

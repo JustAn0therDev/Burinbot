@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Discord.WebSocket;
-using Discord;
-using Discord.Commands;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.IO;
-using Burinbot.Modules;
-using RestSharp;
-using Burinbot.Entities;
+using Microsoft.Extensions.DependencyInjection;
+
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
 
 namespace Burinbot
 {

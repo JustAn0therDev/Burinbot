@@ -1,54 +1,68 @@
-﻿using Discord.Commands;
+﻿using System;
 using System.Threading.Tasks;
-using RestSharp;
+
 using Discord;
-using Burinbot.Entities;
-using Burinbot.Utils;
-using System;
+using Discord.Commands;
+using RestSharp;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class FindTopManga : BaseDiscordCommand
     {
+        private TopMangas TopAnimes { get; set; }
+        private IRestResponse<TopMangas> Response { get; set; }
+
         [Command("topmangas")]
         [Summary("Returns a list of the top rated mangas in MAL!")]
-        public async Task GetTopMangasAsync()
+        public async Task GetTopAnimesAsync()
         {
             try
             {
-                EmbedBuilder builder = BurinbotUtils.CreateDiscordEmbedMessage("Top mangas!", Color.Green, "Here are the top mangas I found!");
-                var topMangas = new TopMangas();
-                var response = new RestClient("https://api.jikan.moe/v3/top/manga").Execute<TopMangas>(new RestRequest());
+                CreateDiscordEmbedMessage("Top mangas!", Color.Green, "Here are the top mangas I found!");
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                ExecuteRestRequest();
 
-                foreach (var anime in response.Data.Top)
-                {
-                    if (topMangas.Top.Count < 25)
-                        topMangas.Top.Add(anime);
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                foreach (var manga in topMangas.Top)
-                {
-                    builder.AddField(x =>
-                    {
-                        x.Name = manga.Title ?? manga.Name;
-                        x.Value = $"Rank: {manga.Rank}";
-                        x.IsInline = false;
-                    });
-                }
-
-                await ReplyAsync("", false, builder.Build());
+                await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
             }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/top/manga");
+            Response = RestClient.Execute<TopMangas>(new RestRequest());
+            TopAnimes = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            int countNumberOfAddedMangas = 0;
+
+            if (TopAnimes == null || TopAnimes.Top.Count == 0)
+                throw new ArgumentNullException("Nothing was found inside the TopMangas list.");
+
+            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage)
+            {
+                EmbedMessage.AddField(x =>
+                {
+                    x.Name = TopAnimes.Top[countNumberOfAddedMangas].Title
+                    ?? TopAnimes.Top[countNumberOfAddedMangas].Name;
+                    x.Value = $"Rank: {TopAnimes.Top[countNumberOfAddedMangas].Rank}";
+                    x.IsInline = false;
+                });
+
+                ++countNumberOfAddedMangas;
+            }
+
+            await ReplyAsync("", false, EmbedMessage.Build());
         }
     }
 }

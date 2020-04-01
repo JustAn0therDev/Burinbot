@@ -1,55 +1,68 @@
-﻿using Discord.Commands;
+﻿using System;
 using System.Threading.Tasks;
-using RestSharp;
+
 using Discord;
-using Burinbot.Entities;
-using Burinbot.Utils;
-using System;
-using System.Linq;
+using Discord.Commands;
+using RestSharp;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class FindTopAnime : BaseDiscordCommand
     {
+        private TopAnimes TopAnimes { get; set; }
+        private IRestResponse<TopAnimes> Response { get; set; }
+
         [Command("topanimes")]
         [Summary("Returns a list of the top rated animes in MAL!")]
         public async Task GetTopAnimesAsync()
         {
-            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
-            var topAnimes = new TopAnimes();
-
             try
             {
-                var response = new RestClient("https://api.jikan.moe/v3/top/anime").Execute<TopAnimes>(new RestRequest());
+                CreateDiscordEmbedMessage("Top animes!", Color.Green, "Here are the top animes I found!");
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                }
+                ExecuteRestRequest();
 
-                foreach (var anime in response.Data.Top)
-                {
-                    if (topAnimes.Top.Count < 25)
-                        topAnimes.Top.Add(anime);
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                foreach (var anime in topAnimes.Top)
-                {
-                    builder.AddField(x =>
-                    {
-                        x.Name = anime.Title ?? anime.Name;
-                        x.Value = $"Rank: {anime.Rank}";
-                        x.IsInline = false;
-                    });
-                }
-
-                await ReplyAsync("", false, builder.Build());
+                await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
             }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/top/anime");
+            Response = RestClient.Execute<TopAnimes>(new RestRequest());
+            TopAnimes = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            int countNumberOfAddedAnimes = 0;
+
+            if (TopAnimes == null || TopAnimes.Top.Count == 0)
+                throw new ArgumentNullException("Nothing was found inside the TopAnimes list.");
+
+            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage)
+            {
+                EmbedMessage.AddField(x =>
+                {
+                    x.Name = TopAnimes.Top[countNumberOfAddedAnimes].Title
+                    ?? TopAnimes.Top[countNumberOfAddedAnimes].Name;
+                    x.Value = $"Rank: {TopAnimes.Top[countNumberOfAddedAnimes].Rank}";
+                    x.IsInline = false;
+                });
+
+                ++countNumberOfAddedAnimes;
+            }
+
+            await ReplyAsync("", false, EmbedMessage.Build());
         }
     }
 }
