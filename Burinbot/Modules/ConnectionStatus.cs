@@ -18,7 +18,7 @@ namespace Burinbot.Modules
             }
             catch(Exception ex)
             {
-                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}");
+                await SendExceptionMessageInDiscordChat(ex);
             }
         }
     }

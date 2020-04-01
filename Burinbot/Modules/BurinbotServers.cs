@@ -1,6 +1,7 @@
 ﻿using Burinbot.Base;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,8 @@ namespace Burinbot.Modules
     {
         #region Private Members
 
-        private StringBuilder Description { get; set; }
+        private DiscordSocketClient DiscordSocketClient { get; set; }
+        private StringBuilder Description { get; set; } = new StringBuilder();
 
         #endregion
 
@@ -22,18 +24,24 @@ namespace Burinbot.Modules
         {
             try
             {
-                var discordSocketClient = Context.Client;
-                Parallel.ForEach(discordSocketClient.CurrentUser.MutualGuilds, server => Description.AppendLine(server.Name));
+                DiscordSocketClient = Context.Client;
 
-                EmbedMessage.WithTitle($"Burinbot is currently in {discordSocketClient.CurrentUser.MutualGuilds.Count} servers!")
-                    .WithDescription(Description.ToString())
-                    .WithColor(Color.Green);
+                BuildStringBuilderWithServersList();
+                CreateDiscordEmbedMessage($"Burinbot is currently in {DiscordSocketClient.CurrentUser.MutualGuilds.Count} servers!", Color.Green, Description.ToString());
 
                 await ReplyAsync("", false, EmbedMessage.Build());
             }
             catch (Exception ex)
             {
-                await ReplyAsync(ex.Message, false, null);
+                await SendExceptionMessageInDiscordChat(ex);
+            }
+        }
+
+        private void BuildStringBuilderWithServersList()
+        {
+            foreach (var server in DiscordSocketClient.CurrentUser.MutualGuilds)
+            {
+                Description.AppendLine($"{server.Name}");
             }
         }
     }

@@ -34,7 +34,7 @@ namespace Burinbot.Modules
         {
             try
             {
-                InitializeCommandWithReceivedDayOfTheWeek(dayOfTheWeek);
+                InitializeClassPropertiesWithReceivedDayOfTheWeek(dayOfTheWeek);
 
                 ExecuteRestRequest();
 
@@ -47,15 +47,15 @@ namespace Burinbot.Modules
             }
             catch (Exception ex)
             {
-                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}");
+                await SendExceptionMessageInDiscordChat(ex);
             }
         }
 
-        private void InitializeCommandWithReceivedDayOfTheWeek(string dayOfTheWeek)
+        private void InitializeClassPropertiesWithReceivedDayOfTheWeek(string dayOfTheWeek)
         {
             AnimeScheduleEmbedMessageBuilder = new AnimeScheduleEmbedMessageBuilder();
             DayOfTheWeek = dayOfTheWeek;
-            EmbedMessage = CreateDiscordEmbedMessage($"Scheduled animes for {DayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {DayOfTheWeek}");
+            CreateDiscordEmbedMessage($"Scheduled animes for {DayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {DayOfTheWeek}");
         }
 
         protected override void ExecuteRestRequest()

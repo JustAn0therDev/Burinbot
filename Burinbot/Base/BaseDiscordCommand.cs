@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 
 using Discord;
@@ -9,6 +10,7 @@ namespace Burinbot.Base
 {
     public abstract class BaseDiscordCommand : ModuleBase<SocketCommandContext>
     {
+        protected const string ExceptionMessage = "Something bad happened in the code! Error: ";
         protected static string Endpoint { get; } = "https://api.jikan.moe/v3";
         protected virtual EmbedBuilder EmbedMessage { get; set; }
         protected RestClient RestClient { get; set; }
@@ -44,14 +46,19 @@ namespace Burinbot.Base
         protected virtual void ExecuteRestRequest() { }
         protected virtual async Task VerifyResponseToSendMessage() => await Task.CompletedTask;
 
-        public EmbedBuilder CreateDiscordEmbedMessage(string title, Color color, string description)
+        protected virtual void CreateDiscordEmbedMessage(string title, Color color, string description)
         {
-            return new EmbedBuilder()
+            EmbedMessage = new EmbedBuilder()
             {
                 Title = title,
                 Color = color,
                 Description = description
             };
+        }
+
+        protected async Task SendExceptionMessageInDiscordChat(Exception exception)
+        {
+            await ReplyAsync(ExceptionMessage + exception.Message);
         }
     }
 }

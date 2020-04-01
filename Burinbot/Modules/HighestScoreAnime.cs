@@ -4,7 +4,6 @@ using Discord.Commands;
 using RestSharp;
 using System;
 using System.Threading.Tasks;
-using Burinbot.Utils;
 using Burinbot.Base;
 
 namespace Burinbot.Modules
@@ -15,7 +14,7 @@ namespace Burinbot.Modules
         [Summary("Returns a list with 25 of the highest scored animes!")]
         public async Task GetHighScoreAnimesAsync()
         {
-            EmbedBuilder builder = CreateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
+            CreateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
 
             try
             {
@@ -42,7 +41,7 @@ namespace Burinbot.Modules
 
                 Parallel.ForEach(animes.Results, anime =>
                 {
-                    builder.AddField(x =>
+                    EmbedMessage.AddField(x =>
                     {
                         x.Name = $"{anime.Title ?? anime.Name}";
                         x.Value = $"Link: {anime.URL}\nScore: {anime.Score}";
@@ -50,7 +49,7 @@ namespace Burinbot.Modules
                     });
                 });
 
-                await ReplyAsync("", false, builder.Build());
+                await ReplyAsync("", false, EmbedMessage.Build());
             }
             catch (Exception ex)
             {

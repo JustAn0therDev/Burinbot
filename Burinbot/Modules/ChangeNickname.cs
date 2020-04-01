@@ -21,7 +21,7 @@ namespace Burinbot.Modules
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
             }
         }
     }
