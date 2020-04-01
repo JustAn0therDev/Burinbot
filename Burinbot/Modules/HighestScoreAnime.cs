@@ -1,59 +1,79 @@
-﻿using Burinbot.Entities;
+﻿using System;
+using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 using RestSharp;
-using System;
-using System.Threading.Tasks;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class HighestScoreAnime : BaseDiscordCommand
     {
+        private AnimeSearch AnimeSearch { get; set; }
+        private IRestResponse<AnimeSearch> Response { get; set; }
+
         [Command("highestscoreanimes")]
         [Summary("Returns a list with 25 of the highest scored animes!")]
-        public async Task GetHighScoreAnimesAsync()
+        public async Task GetHighestScoreAnimesAsync()
         {
-            CreateDiscordEmbedMessage("Highest rated animes!", Color.Green, "These are the animes I found based on your request!");
 
             try
             {
-                var response = new RestClient($"https://api.jikan.moe/v3/search/anime?order_by=score").Execute<AnimeSearch>(new RestRequest());
-                var animes = new AnimeSearch();
+                CreateDiscordEmbedMessage(
+                    "Highest rated animes!", 
+                    Color.Green,
+                    "These are the animes I found based on your request!");
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                ExecuteRestRequest();
 
-                if (response.Data.Results.Count == 0)
-                {
-                    await ReplyAsync("I didn't find any animes. That's weird. :thinking:");
-                    return;
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                Parallel.ForEach(response.Data.Results, item =>
-                {
-                    if (animes.Results.Count < 25)
-                        animes.Results.Add(item);
-                });
+                await VerifyResponseToSendMessage();
 
-                Parallel.ForEach(animes.Results, anime =>
-                {
-                    EmbedMessage.AddField(x =>
-                    {
-                        x.Name = $"{anime.Title ?? anime.Name}";
-                        x.Value = $"Link: {anime.URL}\nScore: {anime.Score}";
-                        x.IsInline = false;
-                    });
-                });
-
-                await ReplyAsync("", false, EmbedMessage.Build());
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
+            }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/search/anime?order_by=score");
+            Response = RestClient.Execute<AnimeSearch>(new RestRequest());
+            AnimeSearch = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            if (AnimeSearch == null || AnimeSearch.Results.Count == 0)
+            {
+                await ReplyAsync("I didn't find any animes. That's weird. :thinking:");
+                return;
+            }
+
+            PopulateEmbedMessageFieldsWithHighestScoreAnimes();
+
+            await ReplyAsync("", false, EmbedMessage.Build());
+        }
+
+        private void PopulateEmbedMessageFieldsWithHighestScoreAnimes()
+        {
+            int counterForCurrentFieldInTheEmbedMessage = 0;
+
+            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage)
+            {
+                EmbedMessage.AddField(x =>
+                {
+                    x.Name = $"{AnimeSearch.Results[counterForCurrentFieldInTheEmbedMessage].Title ?? AnimeSearch.Results[counterForCurrentFieldInTheEmbedMessage].Name}";
+                    x.Value = $"Link: {AnimeSearch.Results[counterForCurrentFieldInTheEmbedMessage].URL}\nScore: {AnimeSearch.Results[counterForCurrentFieldInTheEmbedMessage].Score}";
+                    x.IsInline = false;
+                });
+
+                ++counterForCurrentFieldInTheEmbedMessage;
             }
         }
     }
