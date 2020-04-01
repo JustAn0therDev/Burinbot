@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class Ping : BaseDiscordCommand
+    public class Ping : BaseDecoratorDiscordCommand
     {
         [Command("oinc")]
         [Alias("ping")]

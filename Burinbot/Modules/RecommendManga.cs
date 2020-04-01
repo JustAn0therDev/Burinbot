@@ -10,7 +10,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class RecommendManga : BaseDiscordCommand
+    public class RecommendManga : BaseDecoratorDiscordCommand
     {
         [Command("recommendmanga")]
         [Alias("manga")]

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class BurinbotServers : BaseDiscordCommand
+    public class BurinbotServers : BaseDecoratorDiscordCommand
     {
         #region Private Members
 

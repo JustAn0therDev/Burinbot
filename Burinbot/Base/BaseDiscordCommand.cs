@@ -8,7 +8,7 @@ using RestSharp;
 
 namespace Burinbot.Base
 {
-    public abstract class BaseDiscordCommand : ModuleBase<SocketCommandContext>
+    public abstract class BaseDecoratorDiscordCommand : ModuleBase<SocketCommandContext>
     {
         #region Constant Members
 

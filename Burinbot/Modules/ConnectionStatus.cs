@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class ConnectionStatus : BaseDiscordCommand
+    public class ConnectionStatus : BaseDecoratorDiscordCommand
     {
         [Command("mystatus")]
         [Alias("mystatus")]

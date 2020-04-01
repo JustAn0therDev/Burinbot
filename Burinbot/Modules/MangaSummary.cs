@@ -9,7 +9,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class MangaSummary : BaseDiscordCommand
+    public class MangaSummary : BaseDecoratorDiscordCommand
     {
         [Command("mangasummary")]
         [Summary("Gets the summary and some more information about the requested manga!")]

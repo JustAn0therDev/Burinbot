@@ -9,7 +9,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class User : BaseDiscordCommand
+    public class User : BaseDecoratorDiscordCommand
     {
         [Command("user")]
         [Alias("user")]

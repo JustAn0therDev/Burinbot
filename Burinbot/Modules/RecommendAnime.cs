@@ -9,7 +9,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class RecommendAnime : BaseDiscordCommand
+    public class RecommendAnime : BaseDecoratorDiscordCommand
     {
         [Command("recommendanime")]
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]

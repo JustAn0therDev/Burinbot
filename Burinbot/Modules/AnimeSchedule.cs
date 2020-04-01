@@ -11,7 +11,7 @@ using Burinbot.Modules.SubClassesForModules;
 
 namespace Burinbot.Modules
 {
-    public class AnimeSchedule : BaseDiscordCommand
+    public class AnimeSchedule : BaseDecoratorDiscordCommand
     {
         #region Private Members
 

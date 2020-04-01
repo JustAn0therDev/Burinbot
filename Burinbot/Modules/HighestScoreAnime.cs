@@ -10,7 +10,7 @@ using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
-    public class HighestScoreAnime : BaseDiscordCommand
+    public class HighestScoreAnime : BaseDecoratorDiscordCommand
     {
         private AnimeSearch AnimeSearch { get; set; }
         private IRestResponse<AnimeSearch> Response { get; set; }

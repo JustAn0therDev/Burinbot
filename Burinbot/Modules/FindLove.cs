@@ -7,7 +7,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class FindLove : BaseDiscordCommand
+    public class FindLove : BaseDecoratorDiscordCommand
     {
         [Command("findlove")]
         [Summary("Ah, I see you're a man of culture as well.")]

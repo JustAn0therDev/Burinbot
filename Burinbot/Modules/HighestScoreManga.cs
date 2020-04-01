@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class HighestScoreManga : BaseDiscordCommand
+    public class HighestScoreManga : BaseDecoratorDiscordCommand
     {
         [Command("highestscoremangas")]
         [Summary("Returns a list with 25 of the highest scored animes!")]

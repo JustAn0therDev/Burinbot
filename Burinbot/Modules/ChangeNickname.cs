@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Burinbot.Modules
 {
-    public class ChangeNickname : BaseDiscordCommand
+    public class ChangeNickname : BaseDecoratorDiscordCommand
     {
         [Command("changenick")]
         [Summary("Changes the nickname of the mentioned user. It requires permission to change the nickname. It takes a user and the desired nickname as parameters.")]
