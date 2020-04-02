@@ -54,12 +54,12 @@ namespace Burinbot.Modules
                 return;
             }
 
-            PopulateEmbedMessageFieldsWithHighestScoreAnimes();
+            PopulateEmbedMessageFieldsWithHighestScoreMangas();
 
             await ReplyAsync("", false, EmbedMessage.Build());
         }
 
-        private void PopulateEmbedMessageFieldsWithHighestScoreAnimes()
+        private void PopulateEmbedMessageFieldsWithHighestScoreMangas()
         {
             int counterForCurrentFieldInTheEmbedMessage = 0;
 

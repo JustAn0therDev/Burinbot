@@ -62,7 +62,7 @@ namespace Burinbot.Modules
 
             if (UserMangaList == null || UserMangaList.UserMangas.Count == 0)
             {
-                await ReplyAsync("I didn't find any mangas based on the user and anime name you informed me. Did you type its name correctly?");
+                await ReplyAsync("I didn't find any mangas based on the user and manga name you informed me. Did you type its name correctly?");
                 return;
             }
 
