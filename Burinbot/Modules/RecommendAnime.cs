@@ -3,7 +3,6 @@ using RestSharp;
 using System.Threading.Tasks;
 using Discord;
 using Burinbot.Entities;
-using Burinbot.Utils;
 using System;
 using Burinbot.Base;
 
@@ -11,71 +10,88 @@ namespace Burinbot.Modules
 {
     public class RecommendAnime : BaseDecoratorDiscordCommand
     {
+        private string AnimeNameWithEncodedSpace { get; set; }
+        private AnimeSearch SearchList { get; set; }
+        private AnimeList RecommendationList { get; set; }
+        private IRestResponse<AnimeSearch> Response { get; set; }
+        private IRestResponse<AnimeList> FinalResponse { get; set; }
+        private int MalID { get; set; }
+
         [Command("recommendanime")]
         [Summary("Returns a list of animes based on the informed name from MyAnimeList.")]
         public async Task GetAnimeRecommendationsAsync([Remainder]string animeName)
         {
-            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
-            var searchList = new AnimeSearch();
-            var RecommendationList = new AnimeList();
-
             try
             {
-                //This first search is made because the API does not have a route that accepts a string as an argument to get recommendations.
-                var search = animeName.Replace(" ", "%20");
-                var response = new RestClient($"https://api.jikan.moe/v3/search/anime?q={search}").Execute<AnimeSearch>(new RestRequest());
+                CreateDiscordEmbedMessage("Anime recommendations!", Color.Green, "These are the animes I found based on what you told me:");
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                AnimeNameWithEncodedSpace = animeName.Replace(" ", "%20");
 
-                if (response.Data == null || response.Data.Results.Count == 0)
-                {
-                    await ReplyAsync("I didn't find any recommendations. Did you type the anime's name correctly?");
-                    return;
-                }
+                ExecuteRestRequest();
 
-                foreach (var anime in response.Data.Results)
-                    searchList.Results.Add(anime);
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
-                //Selects the first item of the list to search.
-                int malID = searchList.Results[0].MalID;
+                await GetFirstMALIdFromSearchList();
+                ExecuteFinalRestRequestToGetListOfRecommendations();
 
-                var finalResponse = new RestClient($"https://api.jikan.moe/v3/anime/{malID}/recommendations").Execute<AnimeList>(new RestRequest());
-
-                if (finalResponse.Data.Recommendations.Count > 0)
-                {
-                    Parallel.ForEach(finalResponse.Data.Recommendations, anime =>
-                    {
-                        //Limits the size of the list to 25 so Discord can render the embed list.
-                        if (RecommendationList.Recommendations.Count < 25)
-                            RecommendationList.Recommendations.Add(anime);
-                    });
-                }
-                else
-                {
-                    await ReplyAsync("The anime was found but there are no recommendations like it.");
-                    return;
-                }
-
-                Parallel.ForEach(RecommendationList.Recommendations, anime =>
-                {
-                    builder.AddField(x =>
-                    {
-                        x.Name = anime.Title;
-                        x.Value = anime.URL;
-                        x.IsInline = false;
-                    });
-                });
-
-                await ReplyAsync("", false, builder.Build());
+                await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
                 await SendExceptionMessageInDiscordChat(ex);
             }
+        }
+
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/search/anime?q={AnimeNameWithEncodedSpace}");
+            Response = RestClient.Execute<AnimeSearch>(Request);
+            SearchList = Response.Data;
+        }
+
+        private async Task GetFirstMALIdFromSearchList()
+        {
+            if (SearchList == null || SearchList.Results.Count == 0)
+            {
+                await ReplyAsync("I didn't find any recommendations. Did you insert the correct anime name?");
+                return;
+            }
+
+            MalID = SearchList.Results[0].MalID;
+        }
+
+        private void ExecuteFinalRestRequestToGetListOfRecommendations()
+        {
+            RestClient = new RestClient($"{Endpoint}/anime/{MalID}/recommendations");
+            FinalResponse = RestClient.Execute<AnimeList>(Request);
+            RecommendationList = FinalResponse.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            int counterForNumberOfItemsInAList = 0;
+
+            if (RecommendationList == null || RecommendationList.Recommendations.Count == 0)
+            {
+                await ReplyAsync("The anime was found but there are no recommendations like it.");
+                return;
+            }
+
+            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage
+                && EmbedMessage.Fields.Count < RecommendationList.Recommendations.Count)
+            {
+                EmbedMessage.AddField(x =>
+                {
+                    x.Name = RecommendationList.Recommendations[counterForNumberOfItemsInAList].Title;
+                    x.Value = RecommendationList.Recommendations[counterForNumberOfItemsInAList].URL;
+                    x.IsInline = false;
+                });
+
+                ++counterForNumberOfItemsInAList;
+            }
+
+            await ReplyAsync("", false, EmbedMessage.Build());
         }
     }
 }

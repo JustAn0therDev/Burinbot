@@ -4,71 +4,93 @@ using Discord.Commands;
 using RestSharp;
 using System;
 using System.Threading.Tasks;
-using Burinbot.Utils;
 using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
     public class RecommendManga : BaseDecoratorDiscordCommand
     {
+        private string MangaNameWithEncodedSpace { get; set; }
+        private MangaSearch SearchList { get; set; }
+        private MangaList RecommendationList { get; set; }
+        private IRestResponse<MangaSearch> Response { get; set; }
+        private IRestResponse<MangaList> FinalResponse { get; set; }
+        private int MalID { get; set; }
+
         [Command("recommendmanga")]
-        [Alias("manga")]
         [Summary("Returns a list of mangas based on the informed name from MyAnimeList.")]
         public async Task GetMangaRecommendationsAsync([Remainder]string mangaName)
         {
-            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
-            var searchList = new MangaSearch();
-            var RecommendationList = new MangaList();
-
             try
             {
-                var search = mangaName.Replace(" ", "%20");
-                var response = new RestClient($"https://api.jikan.moe/v3/search/manga?q={search}").Execute<MangaSearch>(new RestRequest());
+                CreateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                MangaNameWithEncodedSpace = mangaName.Replace(" ", "%20");
 
-                if (response.Data == null || response.Data.Results.Count == 0)
-                {
-                    await ReplyAsync("I didn't find any recommendations. Did you type the manga's name correctly?");
-                    return;
-                }
+                ExecuteRestRequest();
 
-                Parallel.ForEach(response.Data.Results, manga => searchList.Results.Add(manga));
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
-                var finalResponse = new RestClient($"https://api.jikan.moe/v3/manga/{searchList.Results[0].MalID}/recommendations").Execute<MangaList>(new RestRequest());
+                await GetFirstMALIdFromSearchList();
+                ExecuteFinalRestRequestToGetListOfRecommendations();
 
-                if (finalResponse.Data.Recommendations.Count > 0)
-                    Parallel.ForEach(finalResponse.Data.Recommendations, manga =>
-                    {
-                        if (RecommendationList.Recommendations.Count < 25)
-                            RecommendationList.Recommendations.Add(manga);
-                    });
-                else
-                {
-                    await ReplyAsync("The manga was found but there are no recommendations like it.");
-                    return;
-                }
-
-                Parallel.ForEach(RecommendationList.Recommendations, recommendation =>
-                {
-                    builder.AddField(x =>
-                    {
-                        x.Name = recommendation.Title;
-                        x.Value = recommendation.URL;
-                        x.IsInline = false;
-                    });
-                });
-
-                await ReplyAsync("", false, builder.Build());
+                await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
                 await SendExceptionMessageInDiscordChat(ex);
             }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/search/manga?q={MangaNameWithEncodedSpace}");
+            Response = RestClient.Execute<MangaSearch>(Request);
+            SearchList = Response.Data;
+        }
+
+        private async Task GetFirstMALIdFromSearchList()
+        {
+            if (SearchList == null || SearchList.Results.Count == 0)
+            {
+                await ReplyAsync("I didn't find any recommendations. Did you insert the correct manga name?");
+                return;
+            }
+
+            MalID = SearchList.Results[0].MalID;
+        }
+
+        private void ExecuteFinalRestRequestToGetListOfRecommendations()
+        {
+            RestClient = new RestClient($"{Endpoint}/manga/{MalID}/recommendations");
+            FinalResponse = RestClient.Execute<MangaList>(Request);
+            RecommendationList = FinalResponse.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            int counterForNumberOfItemsInAList = 0;
+
+            if (RecommendationList == null || RecommendationList.Recommendations.Count == 0)
+            {
+                await ReplyAsync("The manga was found but there are no recommendations like it.");
+                return;
+            }
+
+            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage
+                && EmbedMessage.Fields.Count < RecommendationList.Recommendations.Count)
+            {
+                EmbedMessage.AddField(x =>
+                {
+                    x.Name = RecommendationList.Recommendations[counterForNumberOfItemsInAList].Title;
+                    x.Value = RecommendationList.Recommendations[counterForNumberOfItemsInAList].URL;
+                    x.IsInline = false;
+                });
+
+                ++counterForNumberOfItemsInAList;
+            }
+
+            await ReplyAsync("", false, EmbedMessage.Build());
         }
     }
 }
