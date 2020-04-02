@@ -1,131 +1,173 @@
-﻿using Discord.Commands;
-using RestSharp;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using Burinbot.Entities;
+using System.Collections.Generic;
+
 using Discord;
-using Burinbot.Utils;
+using Discord.Commands;
+using RestSharp;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class User : BaseDecoratorDiscordCommand
     {
+        private MALUser MALUser { get; set; }
+        private Dictionary<string, EmbedBuilder> DictionaryOfEmbedMessages { get; set; } = new Dictionary<string, EmbedBuilder>();
+        private string UserReceivedFromCommand { get; set; }
+        private IRestResponse<MALUser> Response { get; set; }
+
         [Command("user")]
         [Alias("user")]
-        [Summary("Returns some info about the requested user. The parameter is a MAL username!")]
+        [Summary("Returns some info about the requested user. Just type in a MAL username after the command! e.g.: !user Kuraa")]
         public async Task GetUserAsync([Remainder]string user)
         {
-            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:");
-            var animeList = BurinbotUtils.CreateDiscordEmbedMessage("", Color.Green, "List of favorite animes!");
-            var mangaList = BurinbotUtils.CreateDiscordEmbedMessage("", Color.Green, "List of favorite mangas!");
-            var characterList = BurinbotUtils.CreateDiscordEmbedMessage("", Color.Green, "List of favorite characters!");
-
             try
             {
-                var MALUser = user.Replace(" ", "%20");
-                var response = new RestClient($"https://api.jikan.moe/v3/user/{MALUser}").Execute<MALUser>(new RestRequest());
+                UserReceivedFromCommand = user.Replace(" ", "%20");
 
-                if (!response.StatusCode.Equals((System.Net.HttpStatusCode.OK)))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                InitializeDictionaryOfEmbedMessages();
 
-                var User = response.Data;
+                ExecuteRestRequest();
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
-                builder.AddField(x =>
-                {
-                    x.Name = "General Stats";
-                    x.Value = $"Username: {User.Username}\nLink to profile: {User.URL}";
-                    x.IsInline = false;
-                });
-
-                builder.AddField(x =>
-                {
-                    x.Name = "Anime Stats";
-                    x.Value =
-                    $"Total Watched Anime Episodes: {User.AnimeStats.EpisodesWatched}\n" +
-                    $"Currently watching: {User.AnimeStats.Watching}\n" +
-                    $"Total days spent watching anime: {User.AnimeStats.DaysWatched}\n" +
-                    $"Dropped animes: {User.AnimeStats.Dropped}\n" +
-                    $"Animes that he/she plans to watch: {User.AnimeStats.PlanToWatch}\n" +
-                    $"Rewatched animes: {User.AnimeStats.ReWatched}\n";
-                    x.IsInline = false;
-                });
-
-                builder.AddField(x =>
-                {
-                    x.Name = "Manga Stats";
-                    x.Value =
-                    $"Total Read Manga Chapters: {User.MangaStats.ChaptersRead}\n" +
-                    $"Currently reading: {User.MangaStats.Reading}\n" +
-                    $"Total days spent reading: {User.MangaStats.DaysRead}\n" +
-                    $"Dropped mangas: {User.MangaStats.Dropped}\n" +
-                    $"Mangas that he/she plans to read: {User.MangaStats.PlanToRead}\n" +
-                    $"Reread mangas: {User.MangaStats.ReRead}\n";
-                    x.IsInline = false;
-                });
-
-                if (User.Favorites.Animes.Count > 0)
-                {
-                    Parallel.ForEach(User.Favorites.Animes, anime =>
-                    {
-                        if (User.Favorites.Animes.Count < 25)
-                            animeList.AddField(x =>
-                            {
-                                //Since the anime or manga object this time doesn't have a title, but has a name, we use the two inside the same class for simplicity's sake.
-                                x.Name = anime.Name;
-                                x.Value = anime.URL;
-                                x.IsInline = false;
-                            });
-                    });
-                }
-
-                if (User.Favorites.Mangas.Count > 0)
-                {
-                    Parallel.ForEach(User.Favorites.Mangas, manga =>
-                    {
-                        if (User.Favorites.Animes.Count < 25)
-                            animeList.AddField(x =>
-                            {
-                                //Since the anime or manga object this time doesn't have a title, but has a name, we use the two inside the same class for simplicity's sake.
-                                x.Name = manga.Name;
-                                x.Value = manga.URL;
-                                x.IsInline = false;
-                            });
-                    });
-                }
-
-                if(User.Favorites.Characters.Count > 0)
-                {
-                    Parallel.ForEach(User.Favorites.Characters, character =>
-                    {
-                        if (User.Favorites.Characters.Count < 25)
-                            characterList.AddField(x =>
-                            {
-                                x.Name = character.Name;
-                                x.Value = $"{character.URL}";
-                                x.IsInline = false;
-                            });
-                    });
-                }
-
-                await ReplyAsync("", false, builder.Build());
-
-                if (User.Favorites.Animes.Count > 0)
-                    await ReplyAsync("", false, animeList.Build());
-
-                if (User.Favorites.Mangas.Count > 0)
-                    await ReplyAsync("", false, mangaList.Build());
-
-                if (User.Favorites.Characters.Count > 0)
-                    await ReplyAsync("", false, characterList.Build());
+                await VerifyResponseToSendMessage();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                await SendExceptionMessageInDiscordChat(ex);
             }
+        }
+
+        private void InitializeDictionaryOfEmbedMessages()
+        {
+            DictionaryOfEmbedMessages.Add("Burinbot", CreateThenReturnDiscordEmbedMessage("Information about the user!", Color.Green, "This is the information I found for the user requested:"));
+            DictionaryOfEmbedMessages.Add("ListOfAnimesInEmbedMessage", CreateThenReturnDiscordEmbedMessage("", Color.Green, "List of favorite animes!"));
+            DictionaryOfEmbedMessages.Add("ListOfMangasInEmbedMessage", CreateThenReturnDiscordEmbedMessage("", Color.Green, "List of favorite mangas!"));
+            DictionaryOfEmbedMessages.Add("ListOfCharactersInEmbedMessage", CreateThenReturnDiscordEmbedMessage("", Color.Green, "List of favorite characters!"));
+        }
+
+        private EmbedBuilder CreateThenReturnDiscordEmbedMessage(string title, Color color, string description)
+        {
+            return new EmbedBuilder
+            {
+                Title = title,
+                Color = color,
+                Description = description
+            };
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/user/{UserReceivedFromCommand}");
+            Response = RestClient.Execute<MALUser>(Request);
+            MALUser = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            int counterForNumberOfItemsInAList = 0;
+
+            DictionaryOfEmbedMessages["Burinbot"].AddField(x =>
+            {
+                x.Name = "General Stats";
+                x.Value = $"Username: {MALUser.Username}\nLink to profile: {MALUser.URL}";
+                x.IsInline = false;
+            });
+
+            DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].AddField(x =>
+            {
+                x.Name = "Anime Stats";
+                x.Value =
+                $"Total Watched Anime Episodes: {MALUser.AnimeStats.EpisodesWatched}\n" +
+                $"Currently watching: {MALUser.AnimeStats.Watching}\n" +
+                $"Total days spent watching anime: {MALUser.AnimeStats.DaysWatched}\n" +
+                $"Dropped animes: {MALUser.AnimeStats.Dropped}\n" +
+                $"Animes that he/she plans to watch: {MALUser.AnimeStats.PlanToWatch}\n" +
+                $"Rewatched animes: {MALUser.AnimeStats.ReWatched}\n";
+                x.IsInline = false;
+            });
+
+            DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].AddField(x =>
+            {
+                x.Name = "Manga Stats";
+                x.Value =
+                $"Total Read Manga Chapters: {MALUser.MangaStats.ChaptersRead}\n" +
+                $"Currently reading: {MALUser.MangaStats.Reading}\n" +
+                $"Total days spent reading: {MALUser.MangaStats.DaysRead}\n" +
+                $"Dropped mangas: {MALUser.MangaStats.Dropped}\n" +
+                $"Mangas that he/she plans to read: {MALUser.MangaStats.PlanToRead}\n" +
+                $"Reread mangas: {MALUser.MangaStats.ReRead}\n";
+                x.IsInline = false;
+            });
+
+            DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].AddField(x =>
+            {
+                x.Name = "Characters Stats";
+                x.Value = $"Total of favorite characters: {MALUser.Favorites.Characters.Count}";
+                x.IsInline = false;
+            });
+
+            if (MALUser == null || MALUser.Favorites.Animes.Count > 0)
+            {
+                while (DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Fields.Count < LimitOfFieldsPerEmbedMessage
+                    && DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Fields.Count <= MALUser.Favorites.Animes.Count)
+                {
+                    DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].AddField(x =>
+                    {
+                        x.Name = MALUser.Favorites.Animes[counterForNumberOfItemsInAList].Name;
+                        x.Value = MALUser.Favorites.Animes[counterForNumberOfItemsInAList].URL;
+                        x.IsInline = false;
+                    });
+
+                    ++counterForNumberOfItemsInAList;
+                }
+            }
+
+            counterForNumberOfItemsInAList = 0;
+
+            if (MALUser == null || MALUser.Favorites.Mangas.Count > 0)
+            {
+                while (DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Fields.Count < LimitOfFieldsPerEmbedMessage
+                    && DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Fields.Count <= MALUser.Favorites.Mangas.Count)
+                {
+                    DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].AddField(x =>
+                    {
+                        x.Name = MALUser.Favorites.Mangas[counterForNumberOfItemsInAList].Name;
+                        x.Value = MALUser.Favorites.Mangas[counterForNumberOfItemsInAList].URL;
+                        x.IsInline = false;
+                    });
+
+                    ++counterForNumberOfItemsInAList;
+                }
+            }
+
+            counterForNumberOfItemsInAList = 0;
+
+            if (MALUser == null || MALUser.Favorites.Characters.Count > 0)
+            {
+                while (DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Fields.Count < LimitOfFieldsPerEmbedMessage
+                    && DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Fields.Count <= MALUser.Favorites.Characters.Count)
+                {
+                    DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].AddField(x =>
+                    {
+                        x.Name = MALUser.Favorites.Characters[counterForNumberOfItemsInAList].Name;
+                        x.Value = MALUser.Favorites.Characters[counterForNumberOfItemsInAList].URL;
+                        x.IsInline = false;
+                    });
+
+                    ++counterForNumberOfItemsInAList;
+                }
+            }
+
+            await ReplyAsync("", false, DictionaryOfEmbedMessages["Burinbot"].Build());
+
+            await ReplyAsync("", false, DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Build());
+
+            await ReplyAsync("", false, DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Build());
+
+            await ReplyAsync("", false, DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Build());
         }
     }
 }

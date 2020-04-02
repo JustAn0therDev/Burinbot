@@ -27,13 +27,13 @@ namespace Burinbot.Modules
 
                 ExecuteRestRequest();
 
-                PopulateErrorMessageBasedOnHttpStatusCode(Response);
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
                 await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
-                await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}");
+                await SendExceptionMessageInDiscordChat(ex);
             }
         }
 

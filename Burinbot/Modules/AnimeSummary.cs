@@ -24,7 +24,7 @@ namespace Burinbot.Modules
                 AnimeNameWithEncodedSpace = animeName.Replace(" ", "%20");
                 ExecuteRestRequest();
 
-                PopulateErrorMessageBasedOnHttpStatusCode(Response);
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
                 await VerifyResponseToSendMessage();
             }

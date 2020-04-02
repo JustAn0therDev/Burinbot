@@ -26,11 +26,11 @@ namespace Burinbot.Modules
                 await PopulateQueryParameters(user, animeName);
 
                 ExecuteRestRequest();
-                PopulateErrorMessageBasedOnHttpStatusCode(Response);
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
                 await VerifyResponseToSendMessage();
             }
-            catch (Exception ex) { await ReplyAsync($"Something bad happened in the code! Error: {ex.Message}"); }
+            catch (Exception ex) { await SendExceptionMessageInDiscordChat(ex); }
         }
 
         private Task PopulateQueryParameters(string user, string animeName)
@@ -50,24 +50,16 @@ namespace Burinbot.Modules
 
         protected override async Task VerifyResponseToSendMessage()
         {
-            if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            if (UserAnimeList != null && UserAnimeList.UserAnimes.Count == 0)
             {
-                await ReplyAsync(ErrorMessage);
+                await ReplyAsync("I didn't find any animes based on the user and anime name you informed me. Did you mean something else?");
                 return;
             }
-            else
-            {
-                if (UserAnimeList != null && UserAnimeList.UserAnimes.Count == 0)
-                {
-                    await ReplyAsync("I didn't find any animes based on the user and anime name you informed me. Did you mean something else?");
-                    return;
-                }
 
-                if (UserAnimeList.UserAnimes == null)
-                    await ReplyAsync("I didn't find an anime with that name for the specified user. Maybe he/she hasn't given it a score yet!");
-                else
-                    await ReplyAsync($"{Context.User.Mention}, the user scored this anime with {UserAnimeList.UserAnimes[0].Score}");
-            }
+            if (UserAnimeList.UserAnimes == null)
+                await ReplyAsync("I didn't find an anime with that name for the specified user. Maybe he/she hasn't given it a score yet!");
+            else
+                await ReplyAsync($"{Context.User.Mention}, the user scored this anime with {UserAnimeList.UserAnimes[0].Score}");
         }
     }
 }

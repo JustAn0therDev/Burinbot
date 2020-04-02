@@ -29,7 +29,7 @@ namespace Burinbot.Modules
 
                 ExecuteRestRequest();
 
-                PopulateErrorMessageBasedOnHttpStatusCode(Response);
+                PopulateErrorMessageByVerifyingHttpStatusCode(Response);
 
                 await VerifyResponseToSendMessage();
 

@@ -3,7 +3,6 @@ using Discord;
 using Discord.Commands;
 using RestSharp;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Burinbot.Utils;
 using Burinbot.Base;
@@ -68,7 +67,7 @@ namespace Burinbot.Modules
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
             }
         }
     }

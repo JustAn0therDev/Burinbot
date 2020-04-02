@@ -29,12 +29,14 @@ namespace Burinbot.Base
 
         #region Public Methods
 
-        public void PopulateErrorMessageBasedOnHttpStatusCode(IRestResponse response)
+        public void PopulateErrorMessageByVerifyingHttpStatusCode(IRestResponse response)
         {
             if (!response.StatusCode.Equals(HttpStatusCode.OK))
             {
                 ErrorMessage = CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode);
-            }
+
+                throw new Exception(ErrorMessage);
+            } 
         }
 
         #endregion
