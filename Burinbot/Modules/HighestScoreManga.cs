@@ -1,60 +1,78 @@
-﻿using Burinbot.Base;
-using Burinbot.Entities;
-using Burinbot.Utils;
+﻿using System;
+using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 using RestSharp;
-using System;
-using System.Threading.Tasks;
+
+using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class HighestScoreManga : BaseDecoratorDiscordCommand
     {
-        [Command("highestscoremangas")]
-        [Summary("Returns a list with 25 of the highest scored animes!")]
-        public async Task GetHighScoreMangasAsync()
-        {
-            var builder = BurinbotUtils.CreateDiscordEmbedMessage("Highest rated mangas!", Color.Green, "These are the mangas I found based on your request!");
-            var mangas = new MangaSearch();
+        private MangaSearch MangaSearch { get; set; }
+        private IRestResponse<MangaSearch> Response { get; set; }
 
+        [Command("highestscoremangas")]
+        [Summary("Returns a list with 25 of the highest scored mangas!")]
+        public async Task GetHighestScoreAnimesAsync()
+        {
             try
             {
-                var response = new RestClient($"https://api.jikan.moe/v3/search/manga?order_by=score").Execute<MangaSearch>(new RestRequest());
+                CreateDiscordEmbedMessage(
+                    "Highest rated mangas!",
+                    Color.Green,
+                    "These are the mangas I found based on your request!");
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                ExecuteRestRequest();
 
-                if (response.Data.Results.Count == 0)
-                {
-                    await ReplyAsync("I didn't find any mangas. That's weird. :thinking:");
-                    return;
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                Parallel.ForEach(response.Data.Results, manga =>
-                {
-                    if (mangas.Results.Count < 25)
-                        mangas.Results.Add(manga);
-                });
+                await VerifyResponseToSendMessage();
 
-                Parallel.ForEach(mangas.Results, manga =>
-                {
-                    builder.AddField(x =>
-                    {
-                        x.Name = $"{manga.Title ?? manga.Name}";
-                        x.Value = $"Link: {manga.URL}\nScore: {manga.Score}";
-                        x.IsInline = false;
-                    });
-                });
-
-                await ReplyAsync("", false, builder.Build());
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
+            }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/search/manga?order_by=score");
+            Response = RestClient.Execute<MangaSearch>(new RestRequest());
+            MangaSearch = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            if (MangaSearch == null || MangaSearch.Results.Count == 0)
+            {
+                await ReplyAsync("I didn't find any mangas. That's weird. :thinking:");
+                return;
+            }
+
+            PopulateEmbedMessageFieldsWithHighestScoreAnimes();
+
+            await ReplyAsync("", false, EmbedMessage.Build());
+        }
+
+        private void PopulateEmbedMessageFieldsWithHighestScoreAnimes()
+        {
+            int counterForCurrentFieldInTheEmbedMessage = 0;
+
+            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage)
+            {
+                EmbedMessage.AddField(x =>
+                {
+                    x.Name = $"{MangaSearch.Results[counterForCurrentFieldInTheEmbedMessage].Title ?? MangaSearch.Results[counterForCurrentFieldInTheEmbedMessage].Name}";
+                    x.Value = $"Link: {MangaSearch.Results[counterForCurrentFieldInTheEmbedMessage].URL}\nScore: {MangaSearch.Results[counterForCurrentFieldInTheEmbedMessage].Score}";
+                    x.IsInline = false;
+                });
+
+                ++counterForCurrentFieldInTheEmbedMessage;
             }
         }
     }
