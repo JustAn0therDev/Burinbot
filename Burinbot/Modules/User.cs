@@ -162,11 +162,8 @@ namespace Burinbot.Modules
             }
 
             await ReplyAsync("", false, DictionaryOfEmbedMessages["Burinbot"].Build());
-
             await ReplyAsync("", false, DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Build());
-
             await ReplyAsync("", false, DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Build());
-
             await ReplyAsync("", false, DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Build());
         }
     }

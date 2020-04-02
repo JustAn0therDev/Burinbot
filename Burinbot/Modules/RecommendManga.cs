@@ -1,10 +1,12 @@
-﻿using Burinbot.Entities;
+﻿using System;
+using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 using RestSharp;
-using System;
-using System.Threading.Tasks;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {

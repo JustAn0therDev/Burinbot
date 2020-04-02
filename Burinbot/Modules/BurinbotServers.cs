@@ -1,10 +1,12 @@
-﻿using Burinbot.Base;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
+
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using System.Text;
-using System.Threading.Tasks;
+
+using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
