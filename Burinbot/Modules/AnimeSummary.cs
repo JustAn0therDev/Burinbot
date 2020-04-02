@@ -28,7 +28,10 @@ namespace Burinbot.Modules
 
                 await VerifyResponseToSendMessage();
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) 
+            {
+                await SendExceptionMessageInDiscordChat(ex);
+            }
         }
 
         protected override void ExecuteRestRequest()

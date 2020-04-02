@@ -1,47 +1,57 @@
-﻿using Burinbot.Entities;
-using Burinbot.Utils;
+﻿using System;
+using System.Threading.Tasks;
+
 using Discord.Commands;
 using RestSharp;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
+
 using Burinbot.Base;
+using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
     public class MangaSummary : BaseDecoratorDiscordCommand
     {
+        private string MangaNameWithEncodedSpace { get; set; }
+        private MangaSearch MangaSearch { get; set; }
+        private IRestResponse<MangaSearch> Response { get; set; }
+
         [Command("mangasummary")]
         [Summary("Gets the summary and some more information about the requested manga!")]
         public async Task GetMangaSummaryAsync([Remainder]string mangaName)
         {
             try
             {
-                string search = mangaName.Replace(" ", "%20");
-                var response = new RestClient($"https://api.jikan.moe/v3/search/manga?q={search}").Execute<MangaSearch>(new RestRequest());
+                MangaNameWithEncodedSpace = mangaName.Replace(" ", "%20");
+                ExecuteRestRequest();
 
-                if (!response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                {
-                    await ReplyAsync(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
-                    return;
-                }
+                PopulateErrorMessageBasedOnHttpStatusCode(Response);
 
-                if (response.Data == null || response.Data.Results.Count == 0)
-                {
-                    await ReplyAsync("I couldn't find any information about the informed manga. Did you type its name correctly?");
-                    return;
-                }
-
-                var MangaResult = response.Data.Results[0];
-
-                await ReplyAsync(
-                    $"{MangaResult.Title}\nMore Info: {MangaResult.URL}\nSynopsis: {MangaResult.Synopsis}\nChapters: {MangaResult.Chapters}\nScore: {MangaResult.Score}"
-                    );
+                await VerifyResponseToSendMessage();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await SendExceptionMessageInDiscordChat(ex);
             }
+        }
+
+        protected override void ExecuteRestRequest()
+        {
+            RestClient = new RestClient($"{Endpoint}/search/manga?q={MangaNameWithEncodedSpace}");
+            Response = RestClient.Execute<MangaSearch>(new RestRequest());
+            MangaSearch = Response.Data;
+        }
+
+        protected override async Task VerifyResponseToSendMessage()
+        {
+            if (MangaSearch == null || MangaSearch.Results.Count == 0)
+            {
+                await ReplyAsync("I couldn't find any information about the informed manga. Did you type it's name correctly?");
+                return;
+            }
+
+            await ReplyAsync(
+                $"{MangaSearch.Results[0].Title}\nMore Info: {MangaSearch.Results[0].URL}\nSynopsis: {MangaSearch.Results[0].Synopsis}\nChapters: {MangaSearch.Results[0].Chapters}\nScore: {MangaSearch.Results[0].Score}"
+                );
         }
     }
 }
