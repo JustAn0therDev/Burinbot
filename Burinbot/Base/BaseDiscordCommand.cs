@@ -76,7 +76,7 @@ namespace Burinbot.Base
 
         protected async Task SendExceptionMessageInDiscordChat(Exception exception)
         {
-            await ReplyAsync(ExceptionMessage + exception.Message);
+            await ReplyAsync(ExceptionMessage + exception.Message ?? exception.InnerException.Message);
         }
 
         #endregion
