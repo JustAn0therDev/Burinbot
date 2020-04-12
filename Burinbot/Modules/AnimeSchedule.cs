@@ -58,10 +58,10 @@ namespace Burinbot.Modules
         {
             AnimeScheduleEmbedMessageBuilder = new AnimeScheduleEmbedMessageBuilder();
             DayOfTheWeek = dayOfTheWeek;
-            CreateDiscordEmbedMessage($"Scheduled animes for {DayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {DayOfTheWeek}");
+            CreateDiscordEmbedMessageThatCanBeInherited($"Scheduled animes for {DayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {DayOfTheWeek}");
         }
 
-        protected override void CreateDiscordEmbedMessage(string title, Color color, string description)
+        protected void CreateDiscordEmbedMessageThatCanBeInherited(string title, Color color, string description)
         {
             EmbedMessage = new EmbedBuilder()
             {
