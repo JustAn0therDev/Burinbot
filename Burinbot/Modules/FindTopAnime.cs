@@ -10,7 +10,7 @@ using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
-    public class FindTopAnime : BaseDecoratorDiscordCommand
+    public class FindTopAnime : BaseDiscordCommand
     {
         private TopAnimes TopAnimes { get; set; }
         private IRestResponse<TopAnimes> Response { get; set; }

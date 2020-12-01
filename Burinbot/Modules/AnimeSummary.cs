@@ -9,7 +9,7 @@ using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
-    public class AnimeSummary : BaseDecoratorDiscordCommand
+    public class AnimeSummary : BaseDiscordCommand
     {
         private string AnimeNameWithEncodedSpace { get; set; }
         private AnimeSearch AnimeSearch { get; set; }

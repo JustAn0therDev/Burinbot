@@ -10,7 +10,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class BurinbotServers : BaseDecoratorDiscordCommand
+    public class BurinbotServers : BaseDiscordCommand
     {
         #region Private Members
 

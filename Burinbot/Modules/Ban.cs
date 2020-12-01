@@ -8,7 +8,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class Ban : BaseDecoratorDiscordCommand
+    public class Ban : BaseDiscordCommand
     {
         [Command("ban")]
         [Alias("banmember")]

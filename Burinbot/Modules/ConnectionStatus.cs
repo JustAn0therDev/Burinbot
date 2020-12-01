@@ -7,7 +7,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class ConnectionStatus : BaseDecoratorDiscordCommand
+    public class ConnectionStatus : BaseDiscordCommand
     {
         [Command("mystatus")]
         [Alias("mystatus")]

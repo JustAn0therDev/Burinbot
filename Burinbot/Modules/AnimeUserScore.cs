@@ -9,7 +9,7 @@ using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
-    public class AnimeUserScore : BaseDecoratorDiscordCommand
+    public class AnimeUserScore : BaseDiscordCommand
     {
         private string AnimeName { get; set; }
         private string User { get; set; }

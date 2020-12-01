@@ -11,7 +11,7 @@ using Burinbot.Entities;
 
 namespace Burinbot.Modules
 {
-    public class User : BaseDecoratorDiscordCommand
+    public class User : BaseDiscordCommand
     {
         private MALUser MALUser { get; set; }
         private Dictionary<string, EmbedBuilder> DictionaryOfEmbedMessages { get; set; } = new Dictionary<string, EmbedBuilder>();

@@ -8,7 +8,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class Kick : BaseDecoratorDiscordCommand
+    public class Kick : BaseDiscordCommand
     {
         [Command("kick")]
         [Summary("Kicks a member of the server. Burinbot must have permission to kick somebody and you should as well.")]

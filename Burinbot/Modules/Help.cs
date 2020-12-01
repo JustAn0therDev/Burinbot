@@ -6,7 +6,7 @@ using Burinbot.Base;
 
 namespace Burinbot.Modules
 {
-    public class Help : BaseDecoratorDiscordCommand
+    public class Help : BaseDiscordCommand
     {
         #region Private Props
 

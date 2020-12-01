@@ -14,7 +14,7 @@ using Burinbot.Utils;
 
 namespace Burinbot.Modules
 {
-    public class AnimeSchedule : BaseDecoratorDiscordCommand
+    public class AnimeSchedule : BaseDiscordCommand
     {
         #region Private Members
 
@@ -78,23 +78,16 @@ namespace Burinbot.Modules
             Animes = Response.Data;
         }
 
-        private async Task<bool> AnimesPropertyIsNull()
-        {
-            if (Animes == null)
-                return true;
-            else
-                return await CheckIfPropertiesInsideTheAnimesListAreNull();
-        }
+        private async Task<bool> AnimesPropertyIsNull() => Animes == null || await CheckIfPropertiesInsideTheAnimesListAreNull();
 
         private async Task<bool> CheckIfPropertiesInsideTheAnimesListAreNull()
         {
             bool listOfAnimesForTheDayIsNull = false;
             Dictionary<string, List<Anime>> dictionaryOfDaysInAWeek = Animes.ReturnDictionaryOfAllObjectProperties<List<Anime>>();
 
-            List<Anime> listForTheRequestedDay = dictionaryOfDaysInAWeek
-                .Where(w => w.Key.ToLower() == DayOfTheWeek.ToLower())
-                .Select(s => s.Value)
-                .FirstOrDefault();
+            List<Anime> listForTheRequestedDay = dictionaryOfDaysInAWeek?
+                .Where(w => w.Key.ToLower() == DayOfTheWeek.ToLower())?
+                .Select(s => s.Value).FirstOrDefault();
 
             if (listForTheRequestedDay == null)
                 throw new ArgumentException("Couldn't find a day for the week with the day you provided me.");
@@ -142,9 +135,6 @@ namespace Burinbot.Modules
             }
         }
 
-        protected override async Task VerifyResponseToSendMessage()
-        {
-            await ReplyAsync("", false, EmbedMessage.Build());
-        }
+        protected override async Task VerifyResponseToSendMessage() => await ReplyAsync("", false, EmbedMessage.Build());
     }
 }
