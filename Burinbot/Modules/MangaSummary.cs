@@ -36,7 +36,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/search/manga?q={MangaNameWithEncodedSpace}");
+            RestClient = new RestClient($"{ENDPOINT}/search/manga?q={MangaNameWithEncodedSpace}");
             Response = RestClient.Execute<MangaSearch>(new RestRequest());
             MangaSearch = Response.Data;
         }

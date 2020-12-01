@@ -60,7 +60,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/user/{UserReceivedFromCommand}");
+            RestClient = new RestClient($"{ENDPOINT}/user/{UserReceivedFromCommand}");
             Response = RestClient.Execute<MALUser>(Request);
             MALUser = Response.Data;
         }
@@ -111,7 +111,7 @@ namespace Burinbot.Modules
 
             if (MALUser == null || MALUser.Favorites.Animes.Count > 0)
             {
-                while (DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Fields.Count < LimitOfFieldsPerEmbedMessage
+                while (DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE
                     && DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].Fields.Count <= MALUser.Favorites.Animes.Count)
                 {
                     DictionaryOfEmbedMessages["ListOfAnimesInEmbedMessage"].AddField(x =>
@@ -129,7 +129,7 @@ namespace Burinbot.Modules
 
             if (MALUser == null || MALUser.Favorites.Mangas.Count > 0)
             {
-                while (DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Fields.Count < LimitOfFieldsPerEmbedMessage
+                while (DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE
                     && DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].Fields.Count <= MALUser.Favorites.Mangas.Count)
                 {
                     DictionaryOfEmbedMessages["ListOfMangasInEmbedMessage"].AddField(x =>
@@ -147,7 +147,7 @@ namespace Burinbot.Modules
 
             if (MALUser == null || MALUser.Favorites.Characters.Count > 0)
             {
-                while (DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Fields.Count < LimitOfFieldsPerEmbedMessage
+                while (DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE
                     && DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].Fields.Count <= MALUser.Favorites.Characters.Count)
                 {
                     DictionaryOfEmbedMessages["ListOfCharactersInEmbedMessage"].AddField(x =>

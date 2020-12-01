@@ -42,7 +42,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/search/anime?order_by=score");
+            RestClient = new RestClient($"{ENDPOINT}/search/anime?order_by=score");
             Response = RestClient.Execute<AnimeSearch>(new RestRequest());
             AnimeSearch = Response.Data;
         }
@@ -64,7 +64,7 @@ namespace Burinbot.Modules
         {
             int counterForCurrentFieldInTheEmbedMessage = 0;
 
-            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage)
+            while (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE)
             {
                 EmbedMessage.AddField(x =>
                 {

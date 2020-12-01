@@ -12,9 +12,9 @@ namespace Burinbot.Base
     {
         #region Constant Members
 
-        protected const string Endpoint = "https://api.jikan.moe/v3";
-        protected const string ExceptionMessage = "Something bad happened in the code! Error: ";
-        protected const int LimitOfFieldsPerEmbedMessage = 25;
+        protected const string ENDPOINT = "https://api.jikan.moe/v3";
+        protected const string EXCEPTION_MESSAGE = "Something bad happened in the code! Error: ";
+        protected const int LIMIT_OF_FIELDS_PER_EMBED_MESSAGE = 25;
 
         #endregion
 
@@ -23,7 +23,6 @@ namespace Burinbot.Base
         protected virtual EmbedBuilder EmbedMessage { get; set; }
         protected RestClient RestClient { get; set; }
         protected RestRequest Request { get; set; } = new RestRequest(Method.GET);
-        protected string ErrorMessage { get; set; } = string.Empty;
 
         #endregion
 
@@ -31,12 +30,8 @@ namespace Burinbot.Base
 
         public void PopulateErrorMessageByVerifyingHttpStatusCode(IRestResponse response)
         {
-            if (!response.StatusCode.Equals(HttpStatusCode.OK))
-            {
-                ErrorMessage = CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode);
-
-                throw new Exception(ErrorMessage);
-            } 
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception(CreateErrorMessageBasedOnHttpStatusCode(response.StatusCode));
         }
 
         #endregion
@@ -61,8 +56,11 @@ namespace Burinbot.Base
             }
         }
 
-        protected virtual void ExecuteRestRequest() { }
-        protected virtual async Task VerifyResponseToSendMessage() => await Task.CompletedTask;
+        protected virtual void ExecuteRestRequest() 
+            => throw new NotImplementedException("An HTTP request for this command has not been implemented."); 
+
+        protected virtual async Task VerifyResponseToSendMessage() 
+            => await Task.CompletedTask;
 
         protected virtual void CreateDiscordEmbedMessage(string title, Color color, string description)
         {
@@ -75,9 +73,7 @@ namespace Burinbot.Base
         }
 
         protected async Task SendExceptionMessageInDiscordChat(Exception exception)
-        {
-            await ReplyAsync(ExceptionMessage + exception.Message ?? exception.InnerException.Message);
-        }
+            => await ReplyAsync(EXCEPTION_MESSAGE + exception.Message ?? exception.InnerException.Message);
 
         #endregion
     }

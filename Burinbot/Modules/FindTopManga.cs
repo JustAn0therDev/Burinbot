@@ -37,7 +37,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/top/manga");
+            RestClient = new RestClient($"{ENDPOINT}/top/manga");
             Response = RestClient.Execute<TopMangas>(new RestRequest());
             TopAnimes = Response.Data;
         }
@@ -49,7 +49,7 @@ namespace Burinbot.Modules
             if (TopAnimes == null || TopAnimes.Top.Count == 0)
                 throw new ArgumentNullException("Nothing was found inside the TopMangas list.");
 
-            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage)
+            while (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE)
             {
                 EmbedMessage.AddField(x =>
                 {

@@ -73,7 +73,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/schedule/{DayOfTheWeek}");
+            RestClient = new RestClient($"{ENDPOINT}/schedule/{DayOfTheWeek}");
             Response = RestClient.Execute<ScheduledAnime>(new RestRequest());
             Animes = Response.Data;
         }

@@ -47,19 +47,13 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/user/{User}/mangalist?search={MangaName}");
+            RestClient = new RestClient($"{ENDPOINT}/user/{User}/mangalist?search={MangaName}");
             Response = RestClient.Execute<UserMangaList>(Request);
             UserMangaList = Response.Data;
         }
 
         protected override async Task VerifyResponseToSendMessage()
         {
-            if (!string.IsNullOrWhiteSpace(ErrorMessage))
-            {
-                await ReplyAsync(ErrorMessage);
-                return;
-            }
-
             if (UserMangaList == null || UserMangaList.UserMangas.Count == 0)
             {
                 await ReplyAsync("I didn't find any mangas based on the user and manga name you informed me. Did you type its name correctly?");

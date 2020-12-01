@@ -46,7 +46,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{Endpoint}/search/manga?q={MangaNameWithEncodedSpace}");
+            RestClient = new RestClient($"{ENDPOINT}/search/manga?q={MangaNameWithEncodedSpace}");
             Response = RestClient.Execute<MangaSearch>(Request);
             SearchList = Response.Data;
         }
@@ -64,7 +64,7 @@ namespace Burinbot.Modules
 
         private void ExecuteFinalRestRequestToGetListOfRecommendations()
         {
-            RestClient = new RestClient($"{Endpoint}/manga/{MalID}/recommendations");
+            RestClient = new RestClient($"{ENDPOINT}/manga/{MalID}/recommendations");
             FinalResponse = RestClient.Execute<MangaList>(Request);
             RecommendationList = FinalResponse.Data;
         }
@@ -79,7 +79,7 @@ namespace Burinbot.Modules
                 return;
             }
 
-            while (EmbedMessage.Fields.Count < LimitOfFieldsPerEmbedMessage
+            while (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE
                 && EmbedMessage.Fields.Count < RecommendationList.Recommendations.Count)
             {
                 EmbedMessage.AddField(x =>
