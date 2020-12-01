@@ -18,7 +18,7 @@ namespace Burinbot.Modules
     {
         #region Private Members
 
-        private string DayOfTheWeek { get; set; }
+        private string _dayOfTheWeek { get; set; }
 
         #endregion
 
@@ -57,8 +57,8 @@ namespace Burinbot.Modules
         private void InitializeClassPropertiesWithReceivedDayOfTheWeek(string dayOfTheWeek)
         {
             AnimeScheduleEmbedMessageBuilder = new AnimeScheduleEmbedMessageBuilder();
-            DayOfTheWeek = dayOfTheWeek;
-            CreateDiscordEmbedMessageThatCanBeInherited($"Scheduled animes for {DayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {DayOfTheWeek}");
+            _dayOfTheWeek = dayOfTheWeek;
+            CreateDiscordEmbedMessageThatCanBeInherited($"Scheduled animes for {_dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {_dayOfTheWeek}");
         }
 
         protected void CreateDiscordEmbedMessageThatCanBeInherited(string title, Color color, string description)
@@ -73,7 +73,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{ENDPOINT}/schedule/{DayOfTheWeek}");
+            RestClient = new RestClient($"{ENDPOINT}/schedule/{_dayOfTheWeek}");
             Response = RestClient.Execute<ScheduledAnime>(new RestRequest());
             Animes = Response.Data;
         }
@@ -86,7 +86,7 @@ namespace Burinbot.Modules
             Dictionary<string, List<Anime>> dictionaryOfDaysInAWeek = Animes.ReturnDictionaryOfAllObjectProperties<List<Anime>>();
 
             List<Anime> listForTheRequestedDay = dictionaryOfDaysInAWeek?
-                .Where(w => w.Key.ToLower() == DayOfTheWeek.ToLower())?
+                .Where(w => w.Key.ToLower() == _dayOfTheWeek.ToLower())?
                 .Select(s => s.Value).FirstOrDefault();
 
             if (listForTheRequestedDay == null)
@@ -94,7 +94,7 @@ namespace Burinbot.Modules
             
             if (listForTheRequestedDay.Count == 0)
             {
-                await ReplyAsync($"I didn't find any animes scheduled for {DayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
+                await ReplyAsync($"I didn't find any animes scheduled for {_dayOfTheWeek}. Is there a day where animes just don't come out? :thinking:");
                 listOfAnimesForTheDayIsNull = true;
             }
 
@@ -103,33 +103,27 @@ namespace Burinbot.Modules
 
         private async Task BuildEmbedMessageWithResponseData()
         {
-            switch (DayOfTheWeek.ToLower())
+            switch (_dayOfTheWeek.ToUpper())
             {
-                case "monday":
+                case "MONDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForMonday();
                     break;
-
-                case "tuesday":
+                case "TUESDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForTuesday();
                     break;
-
-                case "wednesday":
+                case "WEDNESDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForWednesday();
                     break;
-
-                case "thursday":
+                case "THURSDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForThursday();
                     break;
-
-                case "friday":
+                case "FRIDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForFriday();
                     break;
-
-                case "saturday":
+                case "SATURDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForSaturday();
                     break;
-
-                case "sunday":
+                case "SUNDAY":
                     await AnimeScheduleEmbedMessageBuilder.BuildEmbedMessageWithAnimeScheduledForSunday();
                     break;
             }

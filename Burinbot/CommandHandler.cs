@@ -39,7 +39,7 @@ namespace Burinbot
         #region Private Methods
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {
-            if (!(messageParam is SocketUserMessage message)) return;
+            if (messageParam is not SocketUserMessage message) return;
 
             int argPos = 0;
             if (!(message.HasCharPrefix('!', ref argPos) ||

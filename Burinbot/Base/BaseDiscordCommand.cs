@@ -38,22 +38,15 @@ namespace Burinbot.Base
 
         #region Protected Methods
 
-        protected string CreateErrorMessageBasedOnHttpStatusCode(HttpStatusCode statusCode)
+        protected static string CreateErrorMessageBasedOnHttpStatusCode(HttpStatusCode statusCode)
         {
-            switch (statusCode)
+            return statusCode switch
             {
-                case HttpStatusCode.BadRequest:
-                    return "A BadRequest error returned while I tried to complete your request. Did you specify the parameters correctly?";
-
-                case HttpStatusCode.NotFound:
-                    return "A NotFound status code returned to me while I was completing your request. Did you specify the parameters correctly?";
-
-                case HttpStatusCode.InternalServerError:
-                    return "Something happened on the API end. Contact my creator if you need more details or any help!";
-
-                default:
-                    return "Something happened and I couldn't complete your request. Please try again soon or contact my creator!";
-            }
+                HttpStatusCode.BadRequest => "A BadRequest error returned while I tried to complete your request. Did you specify the parameters correctly?",
+                HttpStatusCode.NotFound => "A NotFound status code returned to me while I was completing your request. Did you specify the parameters correctly?",
+                HttpStatusCode.InternalServerError => "Something happened on the API end. Contact my creator if you need more details or any help!",
+                _ => "Something happened and I couldn't complete your request. Please try again soon or contact my creator!",
+            };
         }
 
         protected virtual void ExecuteRestRequest() 
