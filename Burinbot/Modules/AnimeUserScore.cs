@@ -36,7 +36,7 @@ namespace Burinbot.Modules
         private Task PopulateQueryParameters(string user, string animeName)
         {
             User = user;
-            AnimeName = animeName.Replace(" ", "%20");
+            AnimeName = Uri.EscapeDataString(animeName);
 
             return Task.CompletedTask;
         }

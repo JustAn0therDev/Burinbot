@@ -15,7 +15,7 @@ namespace Burinbot.Modules
     {
         private MALUser MALUser { get; set; }
         private Dictionary<string, EmbedBuilder> DictionaryOfEmbedMessages { get; set; } = new Dictionary<string, EmbedBuilder>();
-        private string UserReceivedFromCommand { get; set; }
+        private string EncodedUsernameFromCommand { get; set; }
         private IRestResponse<MALUser> Response { get; set; }
 
         [Command("user")]
@@ -25,7 +25,7 @@ namespace Burinbot.Modules
         {
             try
             {
-                UserReceivedFromCommand = user.Replace(" ", "%20");
+                EncodedUsernameFromCommand = Uri.EscapeDataString(user);
 
                 InitializeDictionaryOfEmbedMessages();
 
@@ -60,7 +60,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{ENDPOINT}/user/{UserReceivedFromCommand}");
+            RestClient = new RestClient($"{ENDPOINT}/user/{EncodedUsernameFromCommand}");
             Response = RestClient.Execute<MALUser>(Request);
             MALUser = Response.Data;
         }

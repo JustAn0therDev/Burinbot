@@ -14,7 +14,7 @@ namespace Burinbot.Modules
         {
             try
             {
-                await ReplyAsync($"{Context.User.Mention} ronc! Latency: {Context.Client.Latency}ms");
+                await ReplyAsync($"{Context.User.Mention} ronc! Latency: {Context.Client.Latency.ToString("F2")}ms");
             } 
             catch (Exception ex)
             {

@@ -40,8 +40,7 @@ namespace Burinbot.Modules
         private Task PopulateQueryParameters(string user, string mangaName)
         {
             User = user;
-            MangaName = mangaName.Replace(" ", "%20");
-
+            MangaName = Uri.EscapeDataString(mangaName);
             return Task.CompletedTask;
         }
 

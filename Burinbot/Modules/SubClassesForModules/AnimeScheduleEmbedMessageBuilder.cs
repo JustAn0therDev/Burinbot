@@ -7,19 +7,14 @@ namespace Burinbot.Modules.SubClassesForModules
         public Task BuildEmbedMessageWithAnimeScheduledForMonday()
         {
             Parallel.ForEach(Animes.Monday, anime =>
-             {
-                 if (Animes.Monday.Count < 25)
-                     Animes.Monday.Add(anime);
-             });
-
-            Parallel.ForEach(Animes.Monday, anime =>
             {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;
@@ -29,18 +24,13 @@ namespace Burinbot.Modules.SubClassesForModules
         {
             Parallel.ForEach(Animes.Tuesday, anime =>
             {
-                if (Animes.Tuesday.Count < 25)
-                    Animes.Tuesday.Add(anime);
-            });
-
-            Parallel.ForEach(Animes.Tuesday, anime =>
-            {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;
@@ -50,18 +40,13 @@ namespace Burinbot.Modules.SubClassesForModules
         {
             Parallel.ForEach(Animes.Wednesday, anime =>
             {
-                if (Animes.Wednesday.Count < 25)
-                    Animes.Wednesday.Add(anime);
-            });
-
-            Parallel.ForEach(Animes.Wednesday, anime =>
-            {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;
@@ -71,18 +56,13 @@ namespace Burinbot.Modules.SubClassesForModules
         {
             Parallel.ForEach(Animes.Thursday, anime =>
             {
-                if (Animes.Thursday.Count < 25)
-                    Animes.Thursday.Add(anime);
-            });
-
-            Parallel.ForEach(Animes.Thursday, anime =>
-            {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;
@@ -92,18 +72,13 @@ namespace Burinbot.Modules.SubClassesForModules
         {
             Parallel.ForEach(Animes.Friday, anime =>
             {
-                if (Animes.Friday.Count < 25)
-                    Animes.Friday.Add(anime);
-            });
-
-            Parallel.ForEach(Animes.Friday, anime =>
-            {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;
@@ -113,18 +88,13 @@ namespace Burinbot.Modules.SubClassesForModules
         {
             Parallel.ForEach(Animes.Saturday, anime =>
             {
-                if (Animes.Saturday.Count < 25)
-                    Animes.Saturday.Add(anime);
-            });
-
-            Parallel.ForEach(Animes.Saturday, anime =>
-            {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;
@@ -134,18 +104,13 @@ namespace Burinbot.Modules.SubClassesForModules
         {
             Parallel.ForEach(Animes.Sunday, anime =>
             {
-                if (Animes.Sunday.Count < 25)
-                    Animes.Sunday.Add(anime);
-            });
-
-            Parallel.ForEach(Animes.Sunday, anime =>
-            {
-                EmbedMessage.AddField(x =>
-                {
-                    x.Name = $"{anime.Title ?? anime.Name}";
-                    x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
-                    x.IsInline = false;
-                });
+                if (EmbedMessage.Fields.Count < LIMIT_OF_FIELDS_PER_EMBED_MESSAGE) 
+                    EmbedMessage.AddField(x =>
+                    {
+                        x.Name = $"{anime.Title ?? anime.Name}";
+                        x.Value = $"More Info: {anime.URL}\nEpisodes: {anime.Episodes}\nScore: {anime.Score}";
+                        x.IsInline = false;
+                    });
             });
 
             return Task.CompletedTask;

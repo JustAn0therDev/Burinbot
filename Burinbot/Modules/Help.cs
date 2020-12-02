@@ -16,10 +16,7 @@ namespace Burinbot.Modules
 
         #region Constructors
 
-        public Help(CommandService service)
-        {
-            _service = service;
-        }
+        public Help(CommandService service) => _service = service;
 
         #endregion
 

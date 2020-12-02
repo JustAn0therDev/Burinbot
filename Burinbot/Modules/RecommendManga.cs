@@ -12,7 +12,7 @@ namespace Burinbot.Modules
 {
     public class RecommendManga : BaseDiscordCommand
     {
-        private string MangaNameWithEncodedSpace { get; set; }
+        private string EncodedMangaName { get; set; }
         private MangaSearch SearchList { get; set; }
         private MangaList RecommendationList { get; set; }
         private IRestResponse<MangaSearch> Response { get; set; }
@@ -27,7 +27,7 @@ namespace Burinbot.Modules
             {
                 CreateDiscordEmbedMessage("Manga recommendations!", Color.Green, "These are the mangas I found based on what you told me:");
 
-                MangaNameWithEncodedSpace = mangaName.Replace(" ", "%20");
+                EncodedMangaName = Uri.EscapeDataString(mangaName);
 
                 ExecuteRestRequest();
 
@@ -46,7 +46,7 @@ namespace Burinbot.Modules
 
         protected override void ExecuteRestRequest()
         {
-            RestClient = new RestClient($"{ENDPOINT}/search/manga?q={MangaNameWithEncodedSpace}");
+            RestClient = new RestClient($"{ENDPOINT}/search/manga?q={EncodedMangaName}");
             Response = RestClient.Execute<MangaSearch>(Request);
             SearchList = Response.Data;
         }

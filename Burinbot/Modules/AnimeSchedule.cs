@@ -24,9 +24,8 @@ namespace Burinbot.Modules
 
         #region Protected Members
 
-        protected new static EmbedBuilder EmbedMessage { get; set; }
-        protected AnimeScheduleEmbedMessageBuilder AnimeScheduleEmbedMessageBuilder { get; set; }
-        protected static ScheduledAnime Animes { get; set; }
+        protected AnimeScheduleEmbedMessageBuilder AnimeScheduleEmbedMessageBuilder { get; set; } = new AnimeScheduleEmbedMessageBuilder();
+        protected ScheduledAnime Animes { get; set; }
         protected IRestResponse<ScheduledAnime> Response { get; set; }
 
         #endregion
@@ -56,12 +55,11 @@ namespace Burinbot.Modules
 
         private void InitializeClassPropertiesWithReceivedDayOfTheWeek(string dayOfTheWeek)
         {
-            AnimeScheduleEmbedMessageBuilder = new AnimeScheduleEmbedMessageBuilder();
             _dayOfTheWeek = dayOfTheWeek;
-            CreateDiscordEmbedMessageThatCanBeInherited($"Scheduled animes for {_dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {_dayOfTheWeek}");
+            CreateInheritableEmbedMessage($"Scheduled animes for {_dayOfTheWeek}:", Color.Green, $"These are the scheduled animes for {_dayOfTheWeek}");
         }
 
-        protected void CreateDiscordEmbedMessageThatCanBeInherited(string title, Color color, string description)
+        protected void CreateInheritableEmbedMessage(string title, Color color, string description)
         {
             EmbedMessage = new EmbedBuilder()
             {
@@ -83,7 +81,7 @@ namespace Burinbot.Modules
         private async Task<bool> CheckIfPropertiesInsideTheAnimesListAreNull()
         {
             bool listOfAnimesForTheDayIsNull = false;
-            Dictionary<string, List<Anime>> dictionaryOfDaysInAWeek = Animes.ReturnDictionaryOfAllObjectProperties<List<Anime>>();
+            Dictionary<string, List<Anime>> dictionaryOfDaysInAWeek = Animes.GetDictionaryOfAllObjectProperties<List<Anime>>();
 
             List<Anime> listForTheRequestedDay = dictionaryOfDaysInAWeek?
                 .Where(w => w.Key.ToLower() == _dayOfTheWeek.ToLower())?
