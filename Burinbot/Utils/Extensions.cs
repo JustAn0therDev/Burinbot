@@ -11,10 +11,12 @@ namespace Burinbot.Utils
         {
             object propertyValue;
             PropertyInfo[] objectProperties;
-            Dictionary<string, T> dictionaryOfObjectProperties = new Dictionary<string, T>();
+            Dictionary<string, T> dictionaryOfObjectProperties;
 
             if (objectToIterateThrough == null)
                 throw new NullReferenceException("Cannot iterate through properties of a null object.");
+
+            dictionaryOfObjectProperties = new Dictionary<string, T>();
 
             objectProperties = objectToIterateThrough.GetType().GetProperties();
 

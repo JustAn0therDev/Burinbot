@@ -38,16 +38,18 @@ namespace Burinbot
 
         private async Task HandleCommandAsync(SocketMessage arg)
         {
-            var message = (SocketUserMessage)arg;
+            int argPos;
+            SocketUserMessage message = (SocketUserMessage)arg;
 
             if (message == null || message.Author.IsBot) return;
 
-            int argPos = 0;
+            argPos = 0;
             if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos) || !_client.CurrentUser.IsBot)
             {
-                var context = new SocketCommandContext(_client, message);
-
-                var result = await _commands.ExecuteAsync(context, argPos, _services);
+                var result = await
+                    _commands.ExecuteAsync(new SocketCommandContext(_client, message),
+                                            argPos,
+                                            _services);
 
                 if (!result.IsSuccess)
                     Console.WriteLine(result.ErrorReason);
@@ -63,12 +65,17 @@ namespace Burinbot
             _client.MessageReceived += HandleCommandAsync;
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
+
         public async Task RunBotAsync()
         {
             string token = File.ReadAllText("token.txt");
 
+            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token))
+                throw new ArgumentNullException("You must have a token to connect to discord");
+
             _client = new DiscordSocketClient();
             _commands = new CommandService();
+
             _services = new ServiceCollection()
                 .AddSingleton(_client)
                 .AddSingleton(_commands)
