@@ -24,11 +24,8 @@ namespace Burinbot
 
         #region Private Methods
 
-        private Task AnnounceUserJoined(SocketGuildUser user)
-        {
-            user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server! Welcome, oinc!");
-            return Task.CompletedTask;
-        }
+        private async Task AnnounceUserJoined(SocketGuildUser user)
+            => await user.Guild.DefaultChannel.SendMessageAsync($"{user.Mention} has joined the server! Welcome, oinc!");
 
         private Task Log(LogMessage arg)
         {
@@ -44,6 +41,7 @@ namespace Burinbot
             if (message == null || message.Author.IsBot) return;
 
             argPos = 0;
+
             if (message.HasStringPrefix("!", ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos) || !_client.CurrentUser.IsBot)
             {
                 var result = await
